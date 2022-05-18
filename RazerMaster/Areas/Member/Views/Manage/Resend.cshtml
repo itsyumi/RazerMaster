@@ -1,0 +1,37 @@
+﻿
+@{
+    ViewBag.Title = "Resend";
+}
+
+<!-- Modal -->
+<div class="modal fade" id="Resend" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="Resend" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content razer-BGC">
+            <div class="modal-header">
+                <h5 class="modal-title razer-purple" id="staticBackdropLabel">Warning</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-white">
+                This order hasn't been builded ,<br />
+                Please Choose the action below.
+                <form action="@Url.Action("ConfirmAgain","Manage")" method="post">
+                    <input type="hidden" id="Cancel" name="orderId" value="">
+                    <button id="cancel" class="btn" type="submit" style="display:none">Cancel</button>
+                </form>
+                <form action="@Url.Action("Resend","Manage")" method="post">
+                    <input type="hidden" id="Repay" name="OrderId" value="">
+                    <button id="repay" class="btn" type="submit" style="display:none">Repay</button>
+                </form>
+
+            </div>
+            <div class="modal-footer">
+                <label type="button " class="button text-white" style="border-radius: 0.2rem; background-color: rgb(183,4,183);padding: 0.375rem 0.75rem;font-size: 1rem;cursor: pointer;" for="cancel">Cancel this order</label>
+                <label class="button text-white" style="border-radius: 0.2rem;background-color: rgb(183,4,183); padding: 0.375rem 0.75rem;font-size: 1rem;cursor: pointer;" type="button" for="repay">Repay this order</label>
+                @*<button type="button" class="button text-white" style="border-radius:0.2rem;background-color:rgb(183,4,183);padding:1px">Confirm</button>*@
+            </div>
+        </div>
+    </div>
+</div>
+

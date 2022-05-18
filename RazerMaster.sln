@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30406.217
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RazerMaster", "RazerMaster\RazerMaster.csproj", "{3F058C18-C970-4E43-8BF2-7117CE9D2BD4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RazerMasterAdmin", "RazerMasterAdmin\RazerMasterAdmin.csproj", "{2C8E2A30-A069-4B7C-9CD4-26F507756FFD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RazerMasterLibrary", "RazerMasterLibrary\RazerMasterLibrary.csproj", "{8B5CD085-63B3-4D3F-80A2-69828A73DD25}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3F058C18-C970-4E43-8BF2-7117CE9D2BD4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F058C18-C970-4E43-8BF2-7117CE9D2BD4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3F058C18-C970-4E43-8BF2-7117CE9D2BD4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3F058C18-C970-4E43-8BF2-7117CE9D2BD4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2C8E2A30-A069-4B7C-9CD4-26F507756FFD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2C8E2A30-A069-4B7C-9CD4-26F507756FFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2C8E2A30-A069-4B7C-9CD4-26F507756FFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2C8E2A30-A069-4B7C-9CD4-26F507756FFD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8B5CD085-63B3-4D3F-80A2-69828A73DD25}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8B5CD085-63B3-4D3F-80A2-69828A73DD25}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8B5CD085-63B3-4D3F-80A2-69828A73DD25}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8B5CD085-63B3-4D3F-80A2-69828A73DD25}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C4A9A277-8718-4C77-BCAB-0408363E02BB}
+	EndGlobalSection
+EndGlobal

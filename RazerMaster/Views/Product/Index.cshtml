@@ -1,0 +1,288 @@
+﻿@model RazerMaster.ViewModels.ProductIndexViewModel
+
+@{
+    ViewBag.Title = "Products";
+    string routeParameter = "." + Convert.ToString(ViewBag.RouteParameter);
+}
+
+@section topCSS{
+    <link href="~/Assets/Css/product/productList/productList.css" rel="stylesheet" />
+    <style>
+        .button-group p a.is-checked {
+            background-color: #ff00ff;
+        }
+
+        .isotope-pager {
+            text-align: right;
+            font-size: 22px;
+        }
+
+            .isotope-pager a {
+                padding: 0 5px;
+                color: #ff00ff;
+            }
+    </style>
+}
+
+@section endJS{
+    <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+    @*<script src="~/Assets/Js/Plugin/isotope.pkgd.min.js"></script>*@
+    <script src="https://unpkg.com/isotope-layout@3/dist/isotope.pkgd.js"></script>
+    <script src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.js"></script>
+
+    <script>
+        var currentFilter = @Html.Raw(Json.Encode(routeParameter)) == "" ? "." :@Html.Raw(Json.Encode(routeParameter));
+
+        //grab all checked filters and goto page on fresh isotope output
+        function goToPage(n) {
+
+            currentPage = n;
+
+            var exclusives = [];
+            var selector = itemSelector;
+            // for each box checked, add its value and push to array
+            selector += (currentFilter != '.') ? currentFilter : "";
+            exclusives.push(selector);
+            // smash all values back together for 'and' filtering
+            filterValue = exclusives.length ? exclusives.join('') : '.';
+
+            // add page number to the string of filters
+            var wordPage = currentPage.toString();
+            filterValue += ('.' + wordPage);
+
+
+            changeFilter(filterValue);
+            changeCountValue();
+        }
+
+        function setPagination() {
+
+            var SettingsPagesOnItems = function () {
+
+                var itemsLength = $container.children(itemSelector).length;
+                var pages = Math.ceil(itemsLength / itemsPerPage);
+                var item = 1;
+                var page = 1;
+
+                var exclusives = [];
+                var selector = itemSelector;
+                // for each box checked, add its value and push to array
+                selector += (currentFilter != '.') ? currentFilter : '';
+                exclusives.push(selector);
+                // smash all values back together for 'and' filtering
+                filterValue = exclusives.length ? exclusives.join('') : '.';
+
+                // find each child element with current filter values
+                $container.children(filterValue).each(function () {
+
+                    // increment page if a new one is needed
+                    if (item > itemsPerPage) {
+                        page++;
+                        item = 1;
+                    }
+                    // add page number to element as a class
+                    wordPage = page.toString();
+
+                    var classes = $(this).attr('class').split(' ');
+                    var lastClass = classes[classes.length - 1];
+                    // last class shorter than 3 will be a page number, if so, grab and replace
+                    if (lastClass.length < 3) {
+                        $(this).removeClass();
+                        classes.pop();
+                        classes.push(wordPage);
+                        classes = classes.join(' ');
+                        $(this).addClass(classes);
+                    } else {
+                        // if there was no page number, add it
+                        $(this).addClass(wordPage);
+                    }
+                    item++;
+                });
+                currentNumberPages = page;
+            }();
+
+            // create page number navigation
+            var CreatePagers = function () {
+
+                var $isotopePager = ($('.' + pagerClass).length == 0) ? $('<div class="' + pagerClass + '"></div>') : $('.' + pagerClass);
+
+                $isotopePager.html('');
+                for (var i = 0; i < currentNumberPages; i++) {
+                    var $pager = $('<a href="javascript:void(0);" class="pager" ' + pageAttribute + '="' + (i + 1) + '"></a>');
+                    $pager.html(i + 1);
+
+                    $pager.click(function () {
+                        var page = $(this).eq(0).attr(pageAttribute);
+                        goToPage(page);
+                    });
+                    $pager.appendTo($isotopePager);
+                }
+                $container.after($isotopePager);
+            }();
+
+        }
+    </script>
+    <script src="~/Assets/Js/product/productList/productList.js"></script>
+}
+
+
+<div class="jumbotron jumbotron-fluid jumbotron_title">
+    <h3>PRODUCT</h3>
+</div>
+
+<div class="container my-5">
+    <div class="row">
+        <div class="product_cat_list col-3 cat_filters">
+            <h5 class="product_cat_title mt-3 mb-4">Catagories</h5>
+            <div class="button-group" data-filter-group="categories">
+                <p><a href="javascript:void(0)" id="clear-filters" data-filter="*">All</a></p>
+                <hr style="border-top: 1px solid #FF00FF;" />
+                @foreach (var item in Model.CategoryCollection)
+                {
+                    <p><a href="javascript:void(0)" class="button" data-filter=".@item.CategoryName.Replace(' ', '_')">@item.CategoryName</a></p>
+                }
+            </div>
+            <hr style="border-top: 1px solid #FF00FF;" />
+            <h5 class="product_cat_title mt-3 mb-4">Tags</h5>
+            <div class="button-group" data-filter-group="tags">
+                @foreach (var item in Model.ProductTagCollection)
+                {
+                    <p><a href="javascript:void(0)" class="button" data-filter=".@item.TagName.Replace(' ', '_')">@item.TagName</a></p>
+                }
+            </div>
+        </div>
+
+        <div class="col-9">
+            <div class="row">
+                <div class="col">
+                    <div class="product-topbar d-flex align-items-center justify-content-between">
+
+                        <div class="total-products">
+                            <p><span id="countOfIsotopeItem">@Model.ProductCollection.Count()</span> products</p>
+                        </div>
+                        <div class="product-sorting d-flex">
+                            <div class="sorting_container ml-md-auto">
+                                <div class="sorting">
+                                    <ul class="item_sorting">
+                                        <li>
+                                            <span class="sorting_text">Sort by</span>
+                                            <i class="fa fa-chevron-down" aria-hidden="true"></i>
+                                            <ul>
+                                                <li class="product_sorting_btn" data-sort-by="Default"><span>Default</span></li>
+                                                <li class="product_sorting_btn" data-sort-by="LowToHigh"><span>Price (Low to High)</span></li>
+                                                <li class="product_sorting_btn" data-sort-by="HighToLow"><span>Price (High to Low)</span></li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" id="productList">
+
+                @if (Model.ProductCollection.Count() != 0)
+                {
+                    foreach (var item in Model.ProductCollection)
+                    {
+                        string[] imgArray = item.Picture.Split(',');
+                        var productName = item.ProductName;
+                        var category = Model.CategoryCollection.FirstOrDefault(x => x.CategoryID == item.CategoryID);
+                        var categoryName = category != null ? category.CategoryName.Replace(' ', '_') : "";
+                        var tag = Model.ProductTagCollection.FirstOrDefault(x => x.TagID == item.TagID);
+                        var tagName = tag != null ? tag.TagName.Replace(' ', '_') : "";
+
+                        <!-- Single Product -->
+                        <div class="single-product-wrapper col-md-6 col-xl-4 mb-5 @categoryName @tagName">
+
+                            <a href="@Url.Action("ProductDetail", "Product", new { id = item.ProductID })">
+                                <!-- Product Image -->
+                                <div class="product-img">
+                                    <img src="@imgArray[0]" alt="">
+                                    <!-- Hover Thumb -->
+                                    @if (imgArray.Length > 1)
+                                    {
+                                        var img2 = imgArray[1];
+                                        <img class="hover-img" src="@imgArray[1]" alt="">
+                                    }
+                                    <!-- Product Badge -->
+                                    <div class="product-badge offer-badge">
+                                        <span>@Function.GetPricePercentage(item.OriginalPrice, item.SalePrice)</span>
+                                    </div>
+                                    @if (tag != null)
+                                    {
+                                        <div class="product-badge" style="left:unset;right:20px;background-color:@tag.TagColor;">
+                                            <span>@tag.TagName</span>
+                                        </div>
+                                    }
+                                </div>
+                            </a>
+
+                            <!-- Product Description -->
+                            <div class="product-description">
+                                <a href="@Url.Action("ProductDetail", "Product", new { id = item.ProductID })">
+                                    <h6>@item.ProductName</h6>
+                                    <p class="product-item" style="visibility:hidden">@item.ProductID</p>
+                                    <p class="product-price">$@item.SalePrice <span class="old-price">@(Function.GetPricePercentage(item.OriginalPrice, item.SalePrice) == String.Empty ? String.Empty : "$" + @item.OriginalPrice)</span></p>
+                                </a>
+                                <!-- Hover Content -->
+                                <div class="hover-content">
+                                    <!-- Add to Cart -->
+                                    <div class="add-to-cart-btn">
+                                        @if (item.Stock > 0)
+                                        {
+                                            <button class="btn essence-btn" onclick="addToCart(@item.ProductID,1)">Add to Cart</button>
+                                        }
+                                        else
+                                        {
+                                            <button type="button" class="btn essence-btn text-danger">Sold Out</button>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    }
+
+
+                }
+                else
+                {
+                    <h2>Related products not found</h2>
+                }
+
+
+                @*Single Product
+                    <div class="single-product-wrapper col-md-6 col-xl-4 mb-5">
+                        Product Image
+                        <div class="product-img">
+                            <img src="https://assets3.razerzone.com/81-0mFIJ_k-UzOaFfp1drJ0a73U=/1500x1000/https%3A%2F%2Fhybrismediaprod.blob.core.windows.net%2Fsys-master-phoenix-images-container%2Fh28%2Fh7f%2F9011303972894%2Fabyssus-essential-gallery-01.jpg" alt="">
+                            Hover Thumb
+                            <img class="hover-img"
+                                 src="https://assets3.razerzone.com/ABeXPUqCs8Z6UX6M6SvbaTjuVbM=/1500x1000/https%3A%2F%2Fhybrismediaprod.blob.core.windows.net%2Fsys-master-phoenix-images-container%2Fhdd%2Fh4c%2F9011305709598%2Fabyssus-essential-gallery-02.jpg" alt="">
+                            Product Badge
+                            <div class="product-badge new-badge">
+                                <span>New</span>
+                            </div>
+                        </div>
+                        Product Description
+                        <div class="product-description">
+                            <span>topshop</span>
+                            <a href="#"><h6>Knot Front Mini Dress</h6></a>
+                            <p class="product-price">$80.00</p>
+                            Hover Content
+                            <div class="hover-content">
+                                Add to Cart
+                                <div class="add-to-cart-btn">
+                                    <a href="#" class="btn essence-btn">Add to Cart</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>*@
+
+            </div>
+        </div>
+    </div>
+</div>
+

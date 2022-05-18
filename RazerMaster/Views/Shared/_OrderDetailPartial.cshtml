@@ -1,0 +1,109 @@
+﻿@using RazerMasterLibrary.Repositories
+@using Microsoft.AspNet.Identity;
+
+@{
+    //取得目前購物車
+    var currentCurt = RazerMaster.Services.CartSerivce.GetCurrentCart();
+
+    //取得在活動時間內的所有coupon
+    var couponDB = new CouponRepository();
+    var allAvailableCoupon = couponDB.GetAllAvailableCoupons();
+
+    var maxDiscount = 10;
+    var repo = new CoinRepository();
+    var coinDiscount = repo.GetMemberCurrentCoin(User.Identity.GetUserId()) > maxDiscount ? maxDiscount : repo.GetMemberCurrentCoin(User.Identity.GetUserId());
+}
+
+
+<ul>
+    <li class="d-flex flex-row align-items-center justify-content-start">
+
+        @if (currentCurt.TotalAmount > coinDiscount && coinDiscount != 0.00m)
+        {
+            <div class="cart_total_title text-warning">Use RazerCoin [- $ @coinDiscount ]</div>
+            <label for="CoinDiscount" class="cart_total_value ml-auto switch">
+                <span id="btn-box">
+                    <span id="btn"></span>
+                </span>
+            </label>
+        }
+        else
+        {
+            <div class="text-warning">
+                You don't have Razer Coin.<br />
+                Or the Order payment must exceed the coin discount
+            </div>
+        }
+    </li>
+    <li class="d-flex flex-row align-items-center justify-content-start">
+        <div class="cart_total_title text-success">Coupon</div>
+        <div class="cart_total_value ml-auto text-success"><span id="CouponDiscount"><a href="#" data-toggle="modal" data-target="#couponModal">choose your coupun</a></span></div>
+    </li>
+    <li class="d-flex flex-row align-items-center justify-content-start">
+        <div class="cart_total_title text-success">Discount</div>
+        <div class="cart_total_value ml-auto text-success">$<span id="Discount">0</span></div>
+    </li>
+    <li class="d-flex flex-row align-items-center justify-content-start">
+        <div class="h4 text-light">Total</div>
+        <div class="ml-auto h4 text-light">$<span id="OrderTotal">@currentCurt.TotalAmount</span> </div>
+    </li>
+</ul>
+
+
+
+<div class="modal fade" id="couponModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel" style="color:black;">Coupon</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class="couponList table table-bordered" style="padding:20px">
+                    <thead>
+                        <tr>
+                     
+                            <th>Coupon Description</th>
+                            <th>Minimum Charge</th>
+                            <th>Expiration date</th>
+                            <th>Discount</th>
+                            <th>Select</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in allAvailableCoupon)
+                        {
+
+
+                        <tr id="CouponID-@item.CouponID"
+                            class="@if (currentCurt.TotalAmount < item.MinOrderSubtotal)
+                                {
+                                    @:unselectable
+                                } ">
+                        
+                            <td>@item.Description</td>
+                            <td>$@item.MinOrderSubtotal</td>
+                            <td>@item.EndTime</td>
+                            @if (item.Is_Fixed == true)
+                            {
+                                <td>$@item.Discount</td>
+                                <td><input type="radio" id="@item.Code" name="couponSelect" value="@item.Discount" onclick="coupon()"></td>
+                            }
+                            else
+                            {
+                                <td>@item.Discount%off</td>
+                                <td><input type="radio" id="@item.Code" name="couponSelect" value="@(1-item.Discount/100)" onclick="coupon()"></td>
+                            }
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,103 @@
+﻿@charset "utf-8";
+/* CSS Document */
+
+@import url(https://fonts.googleapis.com/css?family=Roboto);
+/* @import url(http://fonts.googleapis.com/css?family=Pathway+Gothic+One); */
+
+
+
+
+.slotMachine .slot {
+    height: 100px;
+    background-position-x: 55%;
+    background-repeat: no-repeat;
+}
+
+/*
+ * Casino
+ */
+#casino {
+    margin: 10px 0;
+    background: url(http://i.imgur.com/6QJjYMe.jpg);
+}
+
+    #casino .content:nth-child(1) {
+        text-align: center;
+        background: url('../img/machine3.png') no-repeat 50% 80px;
+        background-position-x: calc(50% + 30px);
+        min-height: 580px;
+    }
+
+    #casino .content > div {
+        padding-top: 165px;
+        width: 300px;
+        margin: 0 auto;
+        transform: translateX(30px);
+    }
+
+.machineContainer {
+    padding: 5px 1px 5px 1px;
+    height: 135px;
+}
+
+.slotMachine {
+    width: 36.333333%;
+    border: 5px solid #CF5178;
+    height: 100px;
+    display: inline-block;
+}
+
+#casino .btn-group {
+    margin-top: 150px;
+    transform: translateX(-25px);
+}
+
+    #casino .btn-group .btn {
+        border: 2px solid #FF00FF;
+        background-color: transparent;
+    }
+
+        #casino .btn-group .btn:hover, .btn-group .btn:focus {
+            background-color: #FF00FF;
+        }
+
+
+@keyframes neon {
+    0% {
+        box-shadow: 0px 0px 0px 2px purple, inset 0px 0px 0px 2px purple, 0px 0px 20px 4px purple, inset 0px 0px 20px 4px purple;
+    }
+
+    25% {
+        box-shadow: 0px 0px 0px 2px purple, inset 0px 0px 0px 2px purple, 0px 0px 20px 10px purple, inset 0px 0px 20px 10px purple;
+    }
+
+    50% {
+        box-shadow: 0px 0px 0px 2px purple, inset 0px 0px 0px 2px purple, 0px 0px 20px 4px purple, inset 0px 0px 20px 4px purple;
+    }
+
+    75% {
+        box-shadow: 0px 0px 0px 2px purple, inset 0px 0px 0px 2px purple, 0px 0px 2px 1px purple, inset 0px 0px 2px 1px purple;
+    }
+
+    100% {
+        box-shadow: 0px 0px 0px 2px purple, inset 0px 0px 0px 2px purple, 0px 0px 20px 4px purple, inset 0px 0px 20px 4px purple;
+    }
+}
+
+
+.marquee {
+    white-space: nowrap;
+    margin: 0 auto;
+    position: absolute;
+    top: 22%;
+    left: 0;
+    right: 0;
+    width: 320px;
+    color: #ff0;
+    font-size: 1.8em;
+    overflow: hidden;
+    text-shadow: 0 0 0.1em yellow, 0 0 0.1px yellow;
+    box-shadow: 0px 0px 0px 2px purple, inset 0px 0px 0px 2px purple, 0px 0px 10px 4px purple, inset 0px 0px 10px 4px purple;
+    border: 2px solid white;
+    animation: neon .8s infinite;
+}

@@ -1,0 +1,100 @@
+﻿@model IEnumerable<RazerMasterLibrary.Models.Promotions>
+
+@{
+    ViewBag.Title = "Index";
+}
+<!-- content Start -->
+<div class="content">
+    <div class="animated fadeIn">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <strong class="card-title">Promotion Management</strong>
+                    </div>
+
+                    <div class="card-body">
+                        <a class="btn btn-success m-3" href="@Url.Action("Create")" role="button">
+                            <i class="fa fa-plus"></i>&nbsp;
+                            Create
+                        </a>
+                        <table id="bootstrap-data-table" class="table table-striped table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>StartTime</th>
+                                    <th>EndTime</th>
+                                    <th>Picture</th>
+                                    <th>Status</th>
+                                    <th>Operate</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>@item.EventName</td>
+                                        <td>@item.StartTime.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                                        <td>@item.EndTime.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                                        <td><img src="@item.Picture" style="width:75px;height:75px" /></td>
+                                        <td>@(item.Status==1?"On": "Off")</td>
+                                        <td>
+                                            <div class="btn-group" role="group" aria-label="Basic example">
+                                                <a href="@Url.Action("Edit","Promotion",new { id=item.EventID})" class="btn btn-primary">
+                                                    <i class="fa fa-magic"></i>&nbsp;Edit
+                                                </a>
+                                                <a href="@Url.Action("ChangeStatus","StatusChange",new { id=item.EventID,modelName="Promotion"})" class="btn btn-danger">
+                                                    <i class="ti-split-v"></i>&nbsp;On/Off
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div><!-- .animated -->
+</div>
+<!-- content Start -->
+
+
+@section topCSS{
+    <link href="~/assets/css/lib/datatable/dataTables.bootstrap.min.css" rel="stylesheet" />
+}
+@section endJS{
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+    <script src="~/assets/js/lib/data-table/datatables.min.js"></script>
+    <script src="~/assets/js/lib/data-table/dataTables.bootstrap.min.js"></script>
+    <script src="~/assets/js/lib/data-table/dataTables.buttons.min.js"></script>
+    <script src="~/assets/js/lib/data-table/buttons.bootstrap.min.js"></script>
+
+    @if (TempData["message"] != null)
+    {
+        <script type="text/javascript">
+        var message = @Html.Raw(Json.Encode(TempData["message"]));
+            Swal.fire({
+                position: 'top-end',
+                title: message,
+                showConfirmButton: false,
+                timer: 1500
+            })
+        </script>
+    }
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#bootstrap-data-table').DataTable({
+                "columnDefs": [{//設定第3,5欄不要排序
+                    targets: [3, 5],
+                    orderable: false
+                }]
+            });
+        });
+    </script>
+}

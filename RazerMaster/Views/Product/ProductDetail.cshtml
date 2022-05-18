@@ -1,0 +1,342 @@
+﻿@model RazerMaster.ViewModels.ProductDetailViewModel
+@{
+    string[] imgs = Model.product.Picture.Split(',');
+    decimal rateTotal = Model.comments.Sum(x => (decimal)x.Score);
+    int count = Model.comments.Count();
+    var ratingCountList = (List<dynamic>)ViewBag.RatingCountList;
+    var csslink = "https://cdn.jsdelivr.net/npm/@sweetalert2/theme-dark@4/dark.css";
+}
+
+@section topCSS{
+    <link rel="stylesheet" href="~/Assets/Css/product/productdetail/productDetail.css" />
+    <link rel="stylesheet" href="@csslink">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css">
+    <link href="~/Assets/Css/product/productdetail/star-rating-svg.css" rel="stylesheet" />
+
+}
+
+
+<div class="product_details pt-4">
+    <div class="container">
+        <div class="row details_row">
+            <!-- Product Image -->
+            <div class="col-lg-6">
+                <div class="details_image">
+                    <div class="details_image_large">
+                        <img src="@imgs[0]" alt="">
+                        @if (Model.productTag != null)
+                        {
+                            <div class="product_extra product_new" style="background-color:@Model.productTag.TagColor"><a href="#!">@Model.productTag.TagName</a></div>
+                        }
+
+                    </div>
+                    <div class="details_image_thumbnails d-flex flex-row align-items-start justify-content-between">
+                        @foreach (var img in imgs)
+                        {
+                            <div class="details_image_thumbnail" data-image="@img">
+                                <img src="@img" alt="">
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product Content -->
+            <div class="col-lg-6">
+                <div class="details_content">
+                    <div class="details_name">@Model.product.ProductName</div>
+                    <div class="details_price">@Model.product.SalePrice</div>
+                    <div class="details_discount">@(Function.GetPricePercentage(Model.product.OriginalPrice, Model.product.SalePrice) == String.Empty ? String.Empty : Model.product.OriginalPrice.ToString())</div>
+                    <span>@(Function.GetPricePercentage(Model.product.OriginalPrice, Model.product.SalePrice) == String.Empty ? String.Empty : (@Function.GetPricePercentage(Model.product.OriginalPrice, Model.product.SalePrice))) </span>
+
+                    <!-- In Stock -->
+                    <div class="in_stock_container">
+                        <div class="availability">Availability:</div>
+                        @if (Model.product.Stock == 0)
+                        {
+                            <span class="text-warning">Sold Out</span>
+                        }
+                        else
+                        {
+                            <span>In Stock</span>
+                        }
+                    </div>
+                    <div class="details_text">
+                        <p>
+                            @Model.product.Note
+                        </p>
+                    </div>
+
+                    <!-- Product Quantity -->
+                    @if (Model.product.Stock > 0)
+                    {
+                        <div class="product_quantity_container">
+                            <div class="product_quantity clearfix">
+                                <span>Qty</span>
+                                <input id="quantity_input" class="quantity_input" type="text" pattern="[1-9]*" value="1" maxlength="2">
+                                <div class="quantity_buttons">
+                                    <div id="quantity_inc_button" class="quantity_inc quantity_control">
+                                        <i class="fa fa-chevron-up" aria-hidden="true"></i>
+                                    </div>
+                                    <div id="quantity_dec_button" class="quantity_dec quantity_control">
+                                        <i class="fa fa-chevron-down" aria-hidden="true"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="button cart_button button_light">
+                                <a href="javascript:void(0)" onclick="addToCartWithCount(@Model.product.ProductID)">Add to Cart</a>
+                            </div>
+
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+        <!-- Product Spec -->
+        @*<div class="spinner-border" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>*@
+
+
+
+        <div class="my-3">
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" id="descrption-tab" data-toggle="tab" href="#descrption" role="tab" aria-controls="descrption" aria-selected="true">
+                        Product specifications
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="review-tab" data-toggle="tab" href="#review" role="tab" aria-controls="review" aria-selected="false">
+                        Reviews [@count]
+                    </a>
+                </li>
+
+            </ul>
+            <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade show active" id="descrption" role="tabpanel" aria-labelledby="descrption-tab">
+                    <div class="spec mt-3 p-3">
+                        <h3 class="px-2 mb-4">TECH SPECS</h3>
+                        @Html.Raw(Model.product.Description)
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="review" role="tabpanel" aria-labelledby="review-tab">
+                    <div class="spec mt-3 p-3">
+
+                        <div class="row ml-3">
+
+                            @if (count > 0)
+                            {
+                                var avg = rateTotal / count;
+
+                                <div id="ReadonlyReview" data-rating="@avg"></div>
+                                <h3 class="px-2 border-right m-0">
+                                    @count Reviews
+                                </h3>
+                                <div class="ml-2">
+                                    @for (int i = 0; i < ratingCountList.Count(); i++)
+                                    {
+                                        var percent = (Convert.ToDecimal(ratingCountList[i].Count)) / @count * 100;
+
+                                        <div class="row">
+                                            <div class="col-6 d-flex">
+                                                <div class="reviewList" data-rating="@(5-i)"></div>
+                                                <div>(@(ratingCountList[i].Count))</div>
+                                            </div>
+
+                                            <div class="col-6 review-progress mt-1">
+                                                <div class="bar bg"></div>
+                                                <div class="bar fg" style="width: @percent%"></div>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            }
+                            else
+                            {
+                                <h3 class="px-2 mb-4">
+                                    No Review
+                                </h3>
+                            }
+
+                        </div>
+
+
+                        <ul class="mx-2 mb-5">
+                            @foreach (var comment in Model.comments)
+                            {
+                                <li class="mb-1 p-2 border-bottom row">
+                                    <p class="col-4 text-white h6">
+                                        by @comment.NickName：
+                                        <span class="review" data-rating="@comment.Score"></span>
+                                    </p>
+                                    <p class="col-8 text-right text-white h6">@comment.CreateDate</p>
+                                    <p class="col-12 text-white">
+                                        @comment.Content
+                                    </p>
+                                </li>
+                            }
+                        </ul>
+
+
+                        @using (Html.BeginForm("AddComment", "Product", FormMethod.Post, new { }))
+                        {
+                            @Html.HiddenFor(m => m.product.ProductID,new { Name = "ProductID" })
+                            <div class="row">
+                                <div class="col-md-5 col-lg-8">
+                                    @Html.TextBox("Content", null, new { @class = "form-control" })
+                                </div>
+                                <div id="inputReview" class="col-md-4 col-lg-2"></div>
+                                <input type="text" name="Score" readonly id="Score" class="form-control form-control-sm" value="1" hidden>
+                                <div class="col-md-3 col-lg-2">
+                                    <input type="submit" value="Write a review" class="btn btn-outline-light" onclick="return validateData();" />
+                                </div>
+                            </div>
+                        }
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+@section endJS{
+    <script src="~/Assets/Js/product/productdetail/productDetail.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9/dist/sweetalert2.min.js"></script>
+    <script src="~/Assets/Js/product/productdetail/jquery.star-rating-svg.js"></script>
+
+
+    <script>
+
+        $(".reviewList").starRating({
+            readOnly: true,
+            starShape: 'rounded',
+            strokeColor: '#E6D933',
+            strokeWidth: 10,
+            starSize: 16,
+            starGradient: {
+                start: '#FFFF99',
+                end: '#FFD700'
+            }
+        });
+
+
+        $("#inputReview").starRating({
+            initialRating: 1,
+            starShape: 'rounded',
+            starSize: 30,
+            strokeColor: '#894A00',
+            strokeWidth: 10,
+            useFullStars:true,
+            disableAfterRate: false,
+            callback: function (currentRating, $el) {
+                $("#Score").val(currentRating);
+                //alert('rated ' + currentRating);
+                //console.log('DOM Element ', $el);
+            }
+        });
+
+        $("#ReadonlyReview").starRating({
+            readOnly: true,
+            starShape: 'rounded',
+            strokeColor: '#E6D933',
+            strokeWidth: 10,
+            starSize: 30,
+            starGradient: {
+                start: '#FFFF99',
+                end: '#FFD700'
+            }
+        });
+
+        $(".review").starRating({
+            readOnly: true,
+            starShape: 'rounded',
+            strokeColor: '#E6D933',
+            strokeWidth: 10,
+            starSize: 22,
+            starGradient: {
+                start: '#FFFF99',
+                end: '#FFD700'
+            }
+        });
+
+
+
+        function addToCartWithCount(productId) {
+            var productCount = $("#quantity_input").val();
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("AddToCart", "Cart")',
+                data: { id: productId, count: productCount,type:"addMany" }
+            })
+            .done(function (res) {
+                $('#Cart').html(res.cartPartialView);
+            })
+        }
+
+        $('#myTab a').on('click', function (e) {
+            e.preventDefault()
+            $(this).tab('show')
+        })
+
+
+
+        function validateData() {
+            var contentInput = $("#Content");
+            if (contentInput.val() =="") {
+                Swal.fire('Review content is required!')
+                return false;
+            }
+
+            return true;
+        }
+
+        //Description Style Setting
+        var TRs = document.querySelectorAll("tr");
+        TRs.forEach(x => {
+            x.className = "row",
+                x.children[0].className = "col-lg-3 py-3 font-weight-bold text-light",
+                x.children[1].className = "col-lg-9 py-3 text-muted"
+        })
+
+        function validateNum(input) {
+            let reg = / ^\d +$/;
+            if (!reg.test(input.value)) {
+                Swal.fire('please enter number', '', 'warning').then(() => {
+                    countInput.value = 1;
+                });
+            }
+        }
+    </script>
+
+    @if (TempData["message"] != null)
+    {
+        <script type="text/javascript">
+        var message = @Html.Raw(Json.Encode(TempData["message"]));
+            Swal.fire({
+                position: 'center',
+                icon: 'success',
+                title: message
+            })
+        </script>
+    }
+}
+
+
+@if (Model.product.Stock > 0)
+{
+    <script>
+        //quantity_input validateNum
+        var countInput = document.querySelector("#quantity_input");
+        countInput.addEventListener('blur', function () {
+            validateNum(countInput);
+        });
+    </script>
+
+}
+

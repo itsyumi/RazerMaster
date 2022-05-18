@@ -1,0 +1,66 @@
+:root{
+    --primaryColor:rgb(255, 0, 255);
+    --textColor: rgb(84, 84, 84);
+    --primaryFont: 'Exo 2', sans-serif;
+}
+*{
+    font-family: var(--primaryFont);
+}
+body{
+    background-color: black;
+}
+p{
+    color: var(--textColor);
+}
+h2, h3, .accolades-content h4 {
+    color: var(--primaryColor);
+    font-weight: 200;
+}
+.accolades-content h4::after {
+    display: none;
+    /*被foot.css加上底線*/
+}
+h2{
+    font-size: 3rem;
+}
+.bg{
+    background-position: center bottom;
+    background-size: cover;
+}
+.story.title-bg {
+    background-image: url("../../../Img/about/story/about-us-top.jpg");
+    min-height: 850px;
+}
+.story.title-bg .content{
+    padding-bottom: 12.5rem ;
+}
+.content-bg {
+    background-image: url("../../../Img/about/story/about-us-usp-desktop.jpg");
+    min-height: 816px;
+}
+.content-bg .row .item{
+    padding-top: 6rem;
+}
+.accolades-container h3{
+    padding: 1rem 0 3rem;
+}
+@media screen and (max-width: 992px) {
+    .container{
+        padding: unset;
+    }
+    .row{
+        margin: unset;
+    }
+    h2{
+        font-size: 2rem;
+    }
+    .story.bg.title-bg,
+    .bg.content-bg{
+        background-image: unset;
+        min-height: unset;
+    }
+    .story.title-bg .content{
+        padding-bottom: unset ;
+        margin-bottom: 2rem;
+    }
+}

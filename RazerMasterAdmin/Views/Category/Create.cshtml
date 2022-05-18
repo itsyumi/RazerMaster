@@ -1,0 +1,71 @@
+﻿@model RazerMasterLibrary.Models.Categories
+
+@{
+    ViewBag.Title = "CategoryCreate";
+}
+
+<!-- content Start -->
+
+<div class="content">
+    <div class="animated fadeIn">
+        <div class="row justify-content-center">
+            <div class="col-10">
+                <div class="card border-secondary mb-3">
+                    <div class="card-header h5 font-weight-bold">Edit Category</div>
+                    <div class="card-body text-secondary">
+
+                        @using (Html.BeginForm())
+                        {
+                            @Html.AntiForgeryToken()
+
+                            <div class="form-group row">
+                                @Html.LabelFor(model => model.CategoryName, "Category Name", htmlAttributes: new { @class = "col-sm-2 col-form-label" })
+                                <div class="col-sm-10">
+                                    @Html.EditorFor(model => model.CategoryName, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.CategoryName, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                @Html.LabelFor(model => model.Sequence, htmlAttributes: new { @class = "col-sm-2 col-form-label" })
+                                <div class="col-sm-10">
+                                    @Html.EditorFor(model => model.Sequence, new { htmlAttributes = new { @class = "form-control", @Value = "0" } })
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="" class="col-sm-2 col-form-label">Status</label>
+                                <div class="col-sm-10">
+
+                                    <div class="form-check form-check-inline mt-1">
+                                        @Html.RadioButtonFor(model => model.Status, "1", htmlAttributes: new { @class = "form-check-input", @checked = "checked" })On
+                                    </div>
+                                    <div class="form-check form-check-inline mt-1">
+                                        @Html.RadioButtonFor(model => model.Status, "0", htmlAttributes: new { @class = "form-check-input" })Off
+
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "col-sm-2 col-form-label" })
+                                <div class="col-sm-10">
+                                    @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
+                                </div>
+                            </div>
+
+                            <div class="form-group row justify-content-end">
+                                <div class="col-sm-5 d-flex justify-content-end">
+                                    <input type="submit" value="Create" class="btn btn-success m-1" />
+                                    <a class="btn btn-secondary m-1" href="@Url.Action("Index")" role="button">Cancel</a>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div><!-- .animated -->
+</div>
+<!-- content Start -->

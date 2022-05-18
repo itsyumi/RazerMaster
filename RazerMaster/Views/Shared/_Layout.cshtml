@@ -1,0 +1,222 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    <link rel="Shortcut Icon" type="image/x-icon" href="~/Assets/Img/RazerMasterLogo.svg" />
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.0.1/TweenMax.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+
+    @{
+
+        var link = "https://cdn.jsdelivr.net/npm/@sweetalert2/theme-dark@4/dark.css";
+    }
+    <link rel="stylesheet" href="@link">
+    <style>
+        .dropdown-item:hover {
+            background-color: #808080 !important;
+        }
+
+        #toTop {
+            position: fixed;
+            opacity: 1;
+            bottom: 60px;
+            right: 30px;
+            text-decoration: none;
+            width: 44px;
+            height: 44px;
+            z-index: 9;
+            text-align: center;
+            border-radius: 50px;
+            background: -webkit-gradient(linear, left top, right top, color-stop(50%, #D94DFF), color-stop(50%, #1e1d24));
+            background: linear-gradient(to right, #D94DFF 50%, #1e1d24 50%);
+            background-size: 200% 100%;
+            background-position: right;
+            color: #fff;
+            line-height: 3;
+            -webkit-transition: 0.3s;
+            transition: 0.3s;
+        }
+
+            #toTop:hover {
+                background-position: left;
+            }
+    </style>
+
+    @Styles.Render("~/origin/css")
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+
+    @RenderSection("topCSS", required: false)
+    @RenderSection("topJS", required: false)
+</head>
+<body>
+    <a href="#" id="toTop"><i class="fa fa-arrow-up"></i></a>
+
+
+    @Html.Partial("_navbarPartial")
+    @RenderBody()
+    <div class="main-footer border-top border-secondary">
+        <div class="container">
+            <div class="row d-flex justify-content-center">
+                <div class="col-md-3">
+                    <span class="razer-purple rem-1125">Latest News</span>
+                    <nav>
+                        <ul>
+                            <li>@Html.ActionLink("Promotion", "Promotions", "LatestNews", new { area = "" }, "")</li>
+                            <li>@Html.ActionLink("News", "News", "LatestNews", new { area = "" }, "")</li>
+                        </ul>
+                    </nav>
+                </div>
+                <div class="col-md-3">
+                    <span class="razer-purple rem-1125">Products</span>
+                    <nav>
+                        <ul>
+                            <li>@Html.ActionLink("Laptop", "Index", "Product", new { area = "", cat = "Laptop" }, "")</li>
+                            <li>@Html.ActionLink("Mouse", "Index", "Product", new { area = "", cat = "Mouse" }, "")</li>
+                            <li>@Html.ActionLink("Keyboard", "Index", "Product", new { area = "", cat = "Keyboard" },"" )</li>
+                            <li>@Html.ActionLink("Headphone", "Index", "Product", new { area = "", cat = "Headphone" }, "")</li>
+                            <li>@Html.ActionLink("Accessory", "Index", "Product", new { area = "", cat = "Accessory" }, "")</li>
+                        </ul>
+                    </nav>
+                </div>
+                <div class="col-md-3">
+                    <span class="razer-purple rem-1125">About</span>
+                    <nav>
+                        <ul>
+                            <li>@Html.ActionLink("OurStory", "Story", "About", new { area = "" }, "")</li>
+                            <li>@Html.ActionLink("OurStore", "Store", "About", new { area = "" }, "")</li>
+                        </ul>
+                    </nav>
+                </div>
+                <div class="col-md-3">
+                    <span class="razer-purple rem-1125">Support</span>
+                    <nav>
+                        <ul>
+                            <li>@Html.ActionLink("FAQ", "FAQ", "Support", new { area = "" }, "")</li>
+                            <li>@Html.ActionLink("Contact", "Contact", "Support", new { area = "" }, "")</li>
+                        </ul>
+                    </nav>
+                </div>
+
+            </div>
+            <div class="row justify-content-between pt-3">
+                <div class="col-6 col-md-4">
+                    <div class="text-white-50 m-0">Non-profit</div>
+                    <div class="text-white-50 m-0">The information provided on the website is for reference only</div>
+                </div>
+                <div class="col-6 col-md-4 text-white-50 text-right">
+                    Copyright © 2020 RazerMaster Powered by Razer
+                </div>
+            </div>
+
+        </div>
+    </div>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+
+
+    @RenderSection("endCSS", required: false)
+    @RenderSection("endJS", required: false)
+
+    <script src="~/Assets/Js/cart/cart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9/dist/sweetalert2.min.js"></script>
+
+
+    <script>
+        $(function () {
+            $(window).scroll(() => {
+                if ($(this).scrollTop() > 150) {
+                    $('#toTop').css('opacity', '1');
+                } else {
+                    $('#toTop').css('opacity', '0');
+                }
+            });
+
+            $('#toTop').click(() => {
+                $('html,body').animate({ scrollTop: 0 }, 500);
+            });
+        });
+
+        function addToCart(productId,count,type) {
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("AddToCart","Cart")',
+                data: { id: productId,count:count,type:type }
+            })
+                .done(function (res) {
+
+                    $('#Cart').html(res.cartPartialView);
+                    $('#OrderList').html(res.orderPartialView);
+                    $('#cart_total_container').html(res.orderDetailPartialView);
+                    //因為重新渲染所以要重新綁定事件
+                    initQuantity();
+                    clickCoinDiscount();
+
+            })
+        }
+
+         function removeFromCart(productId) {
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("RemoveFromCart","Cart")',
+                data: { id: productId }
+            })
+                .done(function (res) {
+                    if (res.orderPartialView.trim() != "") {
+
+                     $('#Cart').html(res.cartPartialView);
+                     $('#OrderList').html(res.orderPartialView);
+                     $('#cart_total_container').html(res.orderDetailPartialView);
+                     //因為重新渲染所以要重新綁定事件
+                     initQuantity();
+                     clickCoinDiscount();
+
+                }
+                else {
+                   Swal.fire('Cart is empty');
+                     setTimeout(function () {
+                          document.location.href ="@Url.Action("Index","Product")";
+                     },1000)
+                }
+            })
+        }
+
+        function clearCart() {
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("ClearCart","Cart")'
+            })
+            .done(function (res) {
+                 if (res.orderPartialView.trim() != "") {
+                    $('#Cart').html(res.cartPartialView);
+                    $('#OrderList').html(res.orderPartialView);
+                }
+                 else {
+                     Swal.fire('Cart is empty');
+                     setTimeout(function () {
+                         document.location.href ="@Url.Action("Index","Product")";
+                     },1000)
+                }
+            })
+        }
+
+        function clickCoinDiscount() {
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("ClickCoinDiscount", "Cart")'
+            })
+            .done(function (res) {
+                console.log(res);
+                $("#OrderTotal").text(parseFloat(res).toFixed(2));
+                $('#Ship_CoinDiscount').prop('checked', false);//還原checkbox
+            })
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,236 @@
+﻿@model RazerMaster.ViewModels.OrderHistoryViewModel
+@{
+    ViewBag.Title = "OrderHistory";
+    var orderlist = Model.Order;
+    List<RazerMasterLibrary.Models.OrderDetails> orderDetailList = Model.OrderDetail;
+
+}
+
+
+@section topCSS{
+    <link href="~/Areas/Member/Assets/css/AccountManage.css" rel="stylesheet" />
+    <style>
+        .table {
+            margin-bottom: 0 !important;
+            margin-top: 1rem;
+        }
+
+        .coupon:hover {
+            color: rgb(255, 0, 255);
+            cursor: pointer;
+        }
+
+        .coupon {
+            color: rgb(237, 119, 119) !important;
+        }
+
+        .pic {
+            width: 20%
+        }
+
+        .text {
+            width: 70%;
+        }
+
+        .product {
+            box-shadow: 0px 0px 98px -62px rgba(255,74,255,1);
+        }
+
+        .pic img {
+            width: 100%
+        }
+
+
+        .collapse a {
+            display: inline;
+            width: 20%
+        }
+    </style>
+}
+
+<div class="account">
+    <div class="container">
+
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                @Html.ActionLink("Account Detail", "SetMember", null, new { @class = "nav-link " })
+                @*<a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Account Detail</a>*@
+            </li>
+            <li class="nav-item" role="presentation">
+                @Html.ActionLink("Change Password", "ChangePassword", null, new { @class = "nav-link" })
+                @*<a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Change Password</a>*@
+            </li>
+            <li class="nav-item" role="presentation">
+                @Html.ActionLink("Manage Logins", "ManageLogins", null, new { @class = "nav-link" })
+
+                @*<a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">External login</a>*@
+            </li>
+            <li class="nav-item" role="presentation">
+                @Html.ActionLink("Order History", "OrderHistory", null, new { @class = "nav-link active" })
+            </li>
+            <li class="nav-item" role="presentation">
+                @Html.ActionLink("Coin History", "CoinHistory", null, new { @class = "nav-link" })
+            </li>
+        </ul>
+        <div class="main-content">
+
+            @if (orderDetailList.Count != 0)
+            {
+                foreach (var order in orderlist)
+                {
+                    var detailList = orderDetailList.Where(x => x.OrderID == @order.OrderID).ToList();
+                    <table class="table table-hover table-dark">
+                        <thead>
+                            <tr>
+                                <th scope="col">Order Time</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Phone</th>
+                                <th scope="col">Total Price</th>
+                                <th scope="col">Order status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+
+                                <td style="width:20%">@order.OrderTime.ToString("yyyy-MM-dd HH:mm")</td>
+                                <td style="width:15%">@order.CustomerName</td>
+                                <td style="width:15%">@order.CustomerTel</td>
+                                <td style="width:10%">@(order.TotalPrice - order.CoinDiscount)</td>
+                                <td style="width:15%">@GetOrderType(@order.Status)</td>
+
+
+                                <td class="d-flex py-0 justify-content-around">
+                                    <label class="btn mr-2" type="button" data-toggle="collapse" data-target="#order-@order.OrderID">Detail</label>
+                                    @*<button class="btn" type="button" data-toggle="collapse" data-target="#order-@order.OrderID">Detail </button>*@
+                                    @switch (@order.Status)
+                                    {
+                                        case -2:
+                                            @*<form action="@Url.Action("OrderHistory","Manage",new {area="Member" })" method="post">
+                                                    <input type="hidden" id="OrderId" name="OrderId" value="@order.OrderID">
+                                                    <button id="refresh" class="btn" type="submit" style="display:none">Refresh</button>
+                                                </form>*@
+                                            <label class="btn mr-2" type="button" for="refresh" onclick="Resend('@order.OrderID')">Refresh</label>
+                                            break;
+                                        default:
+                                            <label class="btnDisable mr-2" type="button">Refresh</label>
+                                            @*<button class="btnDisable" type="button">Refresh</button>*@
+                                            break;
+                                    }
+
+                                    @switch (@order.Status)
+                                    {
+                                        case 0:
+                                            <label class="btn" type="button" onclick="ConfirmAgain('@order.OrderID')">Cancel</label>
+                                            @*<button class="btn" type="button" onclick="ConfirmAgain('@order.OrderID')">Cancel</button>*@
+                                            @*@Html.ActionLink("Cancel", "ConfirmAgain", "Manage", new { @type = "button", @class = "btn", @dataToggle = "modal", @dataTarget = "#staticBackdrop" });*@
+                                            break;
+                                        default:
+                                            <label class="btnDisable" type="button">Cancel</label>
+                                            @*<button class="btnDisable" type="button">Cancel</button>*@
+                                            break;
+                                    }
+
+
+                                </td>
+
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="collapse" id="order-@order.OrderID">
+                        <div class="card card-body bg-dark text-white">
+                            @foreach (var detail in detailList)
+                            {
+                                var imgurl = OrderHistoryRepository.GetProductPic(detail.ProductID);
+                                <div class="product d-flex flex-row flex-wrap mt-3">
+                                    <div class="pic">
+                                        <a href="~/Product/ProductDetail/@detail.ProductID">
+                                            <img src="@imgurl" style="height:100px;width:150px" class="border" alt="" />
+                                        </a>
+                                    </div>
+                                    <div class="text">
+                                        <a class="h5" href="~/Product/ProductDetail/@detail.ProductID">Name : @detail.ProductName</a>
+                                        <p>Quantity : @detail.Quantity</p>
+                                        <p>$ : @detail.UnitPrice</p>
+                                    </div>
+                                </div>
+                            }
+                            <hr class="border-top border-white" />
+                            <p>PaymentCode : @order.PaymentNo </p>
+                            <p>Original price : @order.TotalPrice </p>
+                            <p>Spend RazerCoin: @order.CoinDiscount</p>
+                            <p>Used Coupon Code: @order.EventCoupon  <a class="coupon" data-toggle="modal" data-target="#CouponModal" onclick="CouponContent('@order.EventCoupon');">Detailed</a></p>
+
+                            <p>CustomerAddress : @order.CustomerAddress</p>
+                            <p>CustomerTel : @order.CustomerTel</p>
+                            <p>Note : @order.Note</p>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <h2 class="text-center">
+                    You have no orders in the past!
+                </h2>
+            }
+        </div>
+
+    </div>
+</div>
+@Html.Action("ConfirmAgain");
+@Html.Action("Resend");
+@Html.Action("CouponContent");
+<script>
+    function ConfirmAgain(OrderId) {
+        $("#staticBackdrop").modal('show');
+        $('#Confirm').val(OrderId);
+
+    }
+    function Resend(OrderId) {
+        $("#Resend").modal('show');
+        $('#Cancel').val(OrderId);
+        $('#Repay').val(OrderId);
+
+    }
+
+
+    function CouponContent(OrderId) {
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("Coupon", "Manage", new { area = "Member" })',
+            data: { code: OrderId }
+        }).done(function (res) {
+            $('#CouponCode').text(res.Code);
+            $('#Description').text(res.Discount);
+            if (res.Is_Fixed)
+                $('#Discount').text('$' + res.Discount)
+            else
+                $('#Discount').text(res.Discount + '%')
+        })
+
+
+    }
+
+
+
+
+
+
+</script>
+
+@functions {
+    public enum OrderType
+    {
+        OrderEstablishing = -2,
+        Canceled = -1,
+        PendingPayment = 0,
+        CompletePayment = 1,
+        Shipped = 2
+    }
+    public string GetOrderType(int? staues)
+    {
+        var orderType = (OrderType)staues;
+        return orderType.ToString();
+    }
+}

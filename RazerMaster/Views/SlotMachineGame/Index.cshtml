@@ -1,0 +1,264 @@
+﻿@{
+
+    var link = "https://cdn.jsdelivr.net/npm/@sweetalert2/theme-dark@4/dark.css";
+}
+
+
+<div class="container">
+    <div id="casino" style="padding-top:50px;">
+        <div class="content">
+
+            <h1 class="mb-4 text-light">RazerMaster Casino</h1>
+            <h6 class="marquee">
+                Play three times per day! Try your luck~
+            </h6>
+
+            <div>
+                <div id="casino1" class="slotMachine" style="margin-left: -65px;">
+                    <div class="slot">
+                        <img src="~/Assets/Img/slot1.png" alt="" />
+                    </div>
+                    <div class="slot">
+                        <img src="~/Assets/Img/slot2.png" alt="" />
+                    </div>
+                    <div class="slot ">
+                        <img src="~/Assets/Img/slot3.png" alt="" />
+                    </div>
+                    <div class="slot ">
+                        <img src="~/Assets/Img/slot4.png" alt="" />
+                    </div>
+                    <div class="slot ">
+                        <img src="~/Assets/Img/slot5.png" alt="" />
+                    </div>
+                    <div class="slot ">
+                        <img src="~/Assets/Img/slot6.png" alt="" />
+                    </div>
+                </div>
+
+                <div id="casino2" class="slotMachine">
+                    <div class="slot">
+                        <img src="~/Assets/Img/slot1.png" alt="" />
+                    </div>
+                    <div class="slot">
+                        <img src="~/Assets/Img/slot2.png" alt="" />
+                    </div>
+                    <div class="slot ">
+                        <img src="~/Assets/Img/slot3.png" alt="" />
+                    </div>
+                    <div class="slot ">
+                        <img src="~/Assets/Img/slot4.png" alt="" />
+                    </div>
+                    <div class="slot ">
+                        <img src="~/Assets/Img/slot5.png" alt="" />
+                    </div>
+                    <div class="slot ">
+                        <img src="~/Assets/Img/slot6.png" alt="" />
+                    </div>
+                </div>
+
+                <div id="casino3" class="slotMachine">
+                    <div class="slot">
+                        <img src="~/Assets/Img/slot1.png" alt="" />
+                    </div>
+                    <div class="slot">
+                        <img src="~/Assets/Img/slot2.png" alt="" />
+                    </div>
+                    <div class="slot ">
+                        <img src="~/Assets/Img/slot3.png" alt="" />
+                    </div>
+                    <div class="slot ">
+                        <img src="~/Assets/Img/slot4.png" alt="" />
+                    </div>
+                    <div class="slot ">
+                        <img src="~/Assets/Img/slot5.png" alt="" />
+                    </div>
+                    <div class="slot ">
+                        <img src="~/Assets/Img/slot6.png" alt="" />
+                    </div>
+                </div>
+
+                <div class="btn-group btn-group-justified" role="group">
+                    <button id="casinoShuffle" type="button" class="btn btn-primary btn-lg">Shuffle!</button>
+                </div>
+            </div>
+
+
+        </div>
+        <p class="text-warning" style="padding:5px 110px">
+            <span class="font-weight-bold">What is RazerMaster Coin？</span><br />
+            RazerMaster Coin is the exclusive currency of RazerMaster. 1 Coins is equal to $1 and can be used to pay for orders directly.<br />
+            Up to $10 Discount
+        </p>
+    </div>
+</div>
+
+@section topCSS{
+    <link href="~/Assets/Css/slotMachineGame.css" rel="stylesheet" />
+    <link href="~/Assets/Js/dist/jquery.slotmachine.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
+    <link rel="stylesheet" href="@link">
+
+    <style>
+        .purple {
+            color: #FF00FF;
+        }
+    </style>
+
+}
+
+@section endJS{
+    <script src="~/Assets/Js/dist/slotmachine.js"></script>
+    <script src="~/Assets/Js/dist/jquery.slotmachine.js"></script>
+    <script src='https://cdn.jsdelivr.net/jquery.marquee/1.4.0/jquery.marquee.min.js'></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9/dist/sweetalert2.min.js"></script>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.blockUI/2.70/jquery.blockUI.js"
+            integrity="sha512-QSb5le+VXUEVEQbfljCv8vPnfSbVoBF/iE+c6MqDDqvmzqnr4KL04qdQMCm0fJvC3gCWMpoYhmvKBFqm1Z4c9A=="
+            crossorigin="anonymous"></script>
+
+
+    <script>
+        var imgIndex;
+        var prizeName;
+        var prizeQuantity;
+
+        $(document).ready(function () {
+            GetGoods();
+
+            $('.marquee').marquee();
+
+        });
+
+        const btnShuffle = document.querySelector('#casinoShuffle');
+        const btnStop = document.querySelector('#casinoStop');
+        const casino1 = document.querySelector('#casino1');
+        const casino2 = document.querySelector('#casino2');
+        const casino3 = document.querySelector('#casino3');
+        const mCasino1 = new SlotMachine(casino1, {
+            active: 0,
+            delay: 500,
+            randomize: function () {
+                return imgIndex;//每次旋轉後選中值的索引（從0開始）
+            }
+        });
+        const mCasino2 = new SlotMachine(casino2, {
+            active: 1,
+            delay: 500,
+            randomize: function () {
+                return imgIndex;
+            }
+        });
+        const mCasino3 = new SlotMachine(casino3, {
+            active: 2,
+            delay: 500,
+            randomize: function () {
+                return imgIndex;
+            }
+        });
+
+
+        btnShuffle.addEventListener('click', () => {
+
+            CheckPrize(prizeQuantity);
+        });
+
+
+        var arr = [];
+        function onComplete(active) {
+            if (arr.length <= 1) {
+                arr.push(active);
+            }
+            else if (arr.length > 1) {
+                arr.push(active);
+                if (arr[0] == arr[1] && arr[1] == arr[2]) {
+                    Swal.fire("You win：" + prizeName).then(() => {
+                        location.reload();
+                    });
+
+                }
+                else {
+                    Swal.fire("Next Time Will Be Better").then(() => {
+                        location.reload();
+                    });
+                }
+                arr = [];
+            }
+        }
+
+        function blockUI() {
+            $.blockUI({
+                message: "<i class='fa fa-refresh fa-spin purple' style='font-size:600%'></i>",
+                css: { borderWidth: '0px', backgroundColor: 'transparent' }
+            });
+            setTimeout($.unblockUI, 3000);
+        };
+
+        function getRandom(x) {
+            return Math.floor(Math.random() * x);
+        };
+
+        function GetGoods() {
+
+            $.ajax({
+                type: 'POST',
+                 url: '@Url.Action("SetPrizeData", "SlotMachineGame")'
+            })
+            .done(function (prizeData) {
+
+                var prizeAry = [];
+
+                for (var i = 0; i < prizeData.length; i++) {
+                    var pName = prizeData[i].Name;
+                    var limit = parseInt(prizeData[i].Chance);
+
+                    for (var j = 0; j < limit; j++) {
+                        prizeAry.push(pName);
+                    }
+                }
+
+                var random = getRandom(1000);
+                getPrizeName = prizeAry[random];//隨機抽獎
+
+                //決定要顯示哪張圖片
+                imgIndex = $.map(prizeData, function (item, index) {
+                    return item.Name;
+                }).indexOf(getPrizeName);
+
+                prizeName = prizeData[imgIndex].Name;
+                prizeQuantity = prizeData[imgIndex].GetCount;
+
+            })
+
+
+        };
+
+        function CheckPrize(quantity) {
+             $.ajax({
+                type: 'POST',
+                 url: '@Url.Action("PlayCasino", "SlotMachineGame")',
+                 data: { Quantity: quantity}
+            })
+            .done(function (res) {
+                console.log(res);
+
+                if (res === "Played") {
+                    Swal.fire("Play three times per day!")
+                    return false;
+                }
+                else if(res==="OK") {
+                    blockUI();
+                    mCasino1.shuffle(5, onComplete); //調用第一欄
+                    setTimeout(function () { //0.5s後調用第二欄
+                        mCasino2.shuffle(5, onComplete);
+                    }, 500);
+                    setTimeout(function () { //1s後調用第三欄
+                        mCasino3.shuffle(5, onComplete);
+                    }, 1000);
+                }
+            })
+        };
+
+
+    </script>
+}

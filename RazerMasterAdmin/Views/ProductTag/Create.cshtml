@@ -1,0 +1,76 @@
+﻿@model RazerMasterLibrary.Models.ProductTags
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<!-- content Start -->
+
+<div class="content">
+    <div class="animated fadeIn">
+        <div class="row justify-content-center">
+            <div class="col-10">
+                <div class="card border-secondary mb-3">
+                    <div class="card-header h5 font-weight-bold">Edit Tag</div>
+                    <div class="card-body text-secondary">
+
+                        @using (Html.BeginForm())
+                        {
+                            @Html.AntiForgeryToken()
+
+                            <div class="form-group row">
+                                @Html.LabelFor(model => model.TagName, "Tag Name", htmlAttributes: new { @class = "col-sm-2 col-form-label" })
+                                <div class="col-sm-10">
+                                    @Html.EditorFor(model => model.TagName, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.TagName, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                @Html.LabelFor(model => model.TagColor, "Tag Color", htmlAttributes: new { @class = "col-sm-2 col-form-label" })
+                                <div class="col-sm-10 d-flex">
+                                    <div class="col-1 p-0">
+                                        <button class="btn btn-outline-secondary"
+                                                data-jscolor="{valueElement:'#color', previewElement:'#color'}">
+                                            Pick
+                                        </button>
+                                    </div>
+                                    <div class="col-11 p-0">
+                                        @*<input class="form-control" id="color">*@
+                                        @Html.EditorFor(model => model.TagColor, new { htmlAttributes = new { @class = "form-control", @id = "color" } })
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="" class="col-sm-2 col-form-label">Status</label>
+                                <div class="col-sm-10">
+                                    <div class="form-check form-check-inline mt-1">
+                                        @Html.RadioButtonFor(model => model.Status, "1", htmlAttributes: new { @class = "form-check-input", @checked = "checked" })On
+                                    </div>
+                                    <div class="form-check form-check-inline mt-1">
+                                        @Html.RadioButtonFor(model => model.Status, "0", htmlAttributes: new { @class = "form-check-input" })Off
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group row justify-content-end">
+                                <div class="col-sm-5 d-flex justify-content-end">
+                                    <input type="submit" value="Create" class="btn btn-success m-1" />
+                                    <a class="btn btn-secondary m-1" href="@Url.Action("Index")" role="button">Cancel</a>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div><!-- .animated -->
+    </div>
+</div>
+<!-- content Start -->
+
+
+@section endJS{
+    <script src="~/assets/js/jscolor.js"></script>
+}

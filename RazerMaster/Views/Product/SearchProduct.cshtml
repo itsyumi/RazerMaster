@@ -1,0 +1,133 @@
+﻿@model RazerMaster.ViewModels.SearchProductViewModel
+
+@section topCSS{
+    <link href="~/Assets/Css/product/productList/productList.css" rel="stylesheet" />
+    <style>
+        .button-group p a.is-checked {
+            background-color: #ff00ff;
+        }
+
+        .isotope-pager {
+            text-align: right;
+            font-size: 22px;
+        }
+
+            .isotope-pager a {
+                padding: 0 5px;
+                color: #ff00ff;
+            }
+    </style>
+}
+
+@section endJS{
+    <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/isotope-layout@3/dist/isotope.pkgd.js"></script>
+    <script src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.js"></script>
+    <script src="~/Assets/Js/product/productList/productList.js"></script>
+}
+
+
+<div class="jumbotron jumbotron-fluid jumbotron_title">
+    <h3>PRODUCT</h3>
+</div>
+
+<div class="container my-5">
+    <div class="row">
+        <div class="col-12">
+            <div class="row">
+                <div class="col">
+                    <div class="product-topbar d-flex align-items-center justify-content-between">
+
+                        <div class="total-products">
+                            <p><span id="countOfIsotopeItem">@Model.products.Count()</span> products</p>
+                        </div>
+                        <div class="product-sorting d-flex">
+
+                            <div class="sorting_container ml-md-auto">
+                                <div class="sorting">
+                                    <ul class="item_sorting">
+                                        <li>
+                                            <span class="sorting_text">Sort by</span>
+                                            <i class="fa fa-chevron-down" aria-hidden="true"></i>
+                                            <ul>
+                                                <li class="product_sorting_btn" data-sort-by="Default"><span>Default</span></li>
+                                                <li class="product_sorting_btn" data-sort-by="LowToHigh"><span>Price (Low to High)</span></li>
+                                                <li class="product_sorting_btn" data-sort-by="HighToLow"><span>Price (High to Low)</span></li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <h2 class="text-center mb-5 text-light">@ViewBag.SearchText</h2>
+                </div>
+            </div>
+            <div class="row" id="productList">
+
+                @if (Model.products.Count() != 0)
+                {
+                    foreach (var item in Model.products)
+                    {
+                        //取得圖片檔名Array
+                        string[] imgArray = item.Picture.Split(',');
+
+                        var productName = item.ProductName;
+                        var tag = Model.productTags.FirstOrDefault(x => x.TagID == item.TagID);
+                        var tagName = tag != null ? tag.TagName.Replace(' ', '_') : "";
+
+                        <div class="single-product-wrapper col-md-6 col-xl-4 mb-5 @tagName">
+                            <a href="@Url.Action("ProductDetail", "Product", new { id = item.ProductID })">
+
+                                <!-- Product Image -->
+                                <div class="product-img">
+                                    <img src="@imgArray[0]" alt="">
+                                    <!-- Hover Thumb -->
+                                    @if (imgArray.Length > 1)
+                                    {
+                                        var img2 = imgArray[1];
+                                        <img class="hover-img" src="@imgArray[1]" alt="">
+                                    }
+                                    <!-- Product Badge -->
+                                    <div class="product-badge offer-badge">
+                                        <span>@Function.GetPricePercentage(item.OriginalPrice, item.SalePrice)</span>
+                                    </div>
+                                    @if (tag != null)
+                                    {
+                                        <div class="product-badge" style="left:unset;right:20px;background-color:@tag.TagColor;">
+                                            <span>@tag.TagName</span>
+                                        </div>
+                                    }
+                                </div>
+                            </a>
+
+                            <!-- Product Description -->
+                            <div class="product-description">
+                                <a href="@Url.Action("ProductDetail", "Product", new { id = item.ProductID })">
+                                    <h6>@item.ProductName</h6>
+                                    <p class="product-item" style="visibility:hidden">@item.ProductID</p>
+                                    <p class="product-price">$@item.SalePrice <span class="old-price">@(Function.GetPricePercentage(item.OriginalPrice, item.SalePrice) == String.Empty ? String.Empty : "$" + @item.OriginalPrice)</span></p>
+                                </a>
+                                <!-- Hover Content -->
+                                <div class="hover-content">
+                                    <!-- Add to Cart -->
+                                    <div class="add-to-cart-btn">
+                                        @if (item.Stock > 0)
+                                        {
+                                            <button class="btn essence-btn" onclick="addToCart(@item.ProductID,1)">Add to Cart</button>
+                                        }
+                                        else
+                                        {
+                                            <button type="button" class="btn essence-btn text-danger">Sold Out</button>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>
+

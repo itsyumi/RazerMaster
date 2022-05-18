@@ -1,0 +1,18 @@
+﻿
+@if (Request.IsAuthenticated)
+{
+@Html.AntiForgeryToken()
+var user = Html.Action("UserNickName", "Manage", new { area = "Member" });
+<ul class="nav navbar-nav navbar-right" id="loginRegister">
+    <li>
+        @Html.ActionLink("Hello " + user + "!", "SetMember", "Manage", new { area = "Member" }, htmlAttributes: new { title = "Manage",@class="text-light" })
+    </li>
+</ul>
+
+}
+else
+{
+@*<div class="hassubs">@Html.ActionLink("Sign up", "Register", "Member", new { area = "Member" }, new { @class = "razer-purple rem-1125" })</div>*@
+<div class="hassubs" id="loginRegister">@Html.ActionLink("Login/Register", "Login", "Member", new { area = "Member" }, new { @class = "razer-purple" })</div>
+
+}

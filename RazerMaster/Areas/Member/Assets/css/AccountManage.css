@@ -1,0 +1,81 @@
+﻿
+.nav-tabs {
+    display: flex;
+    justify-content: center;
+}
+
+.account h2 {
+    color: white;
+    margin-bottom: 3rem;
+}
+
+.account h3 {
+    color: white;
+    font-size: 1.25rem;
+}
+
+
+.account a {
+    color: #FF00FF;
+}
+
+.account {
+    position: relative;
+    min-height: 500px;
+    width: 100%;
+    display: flex;
+    background-color: rgba(255, 255, 255,.3);
+    background-image: url("/Areas/Member/Assets/img/AccountManage/account2.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-attachment: fixed;
+}
+
+    .account .container {
+        position: relative;
+        margin-top: 1rem;
+    }
+
+    .account .btn {
+        background-color: black;
+        border-color: rgb(183,4,183);
+        width: 80%;
+        color: white;
+    }
+
+.cBtn {
+    background-color: black;
+    border-color: rgb(183,4,183);
+    width: 80%;
+    color: white;
+}
+
+.btnDisable {
+    display: inline-block;
+    background-color: darkslategrey;
+    border-color: rgb(72, 36, 72);
+    width: 80%;
+    color: grey;
+    cursor: default !important;
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    border-radius: 0.25rem;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.account .btn:hover {
+    background-color: rgb(183,4,183);
+}
+
+.account .main-content {
+    padding: 25px;
+}
+
+.account input,
+.account select,
+.account textarea {
+    max-width: 280px;
+}

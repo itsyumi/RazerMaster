@@ -1,0 +1,41 @@
+.storeBtn {
+    position: relative;
+    color: white;
+    background-color: rgb(150, 0, 150);
+    border: 0;
+    box-sizing: border-box;
+    padding: 0.75rem;
+}
+
+.storeBtn::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 0;
+    height: 100%;
+    background-color: rgb(150, 0, 150);
+}
+
+.storeBtn::before:hover {
+    z-index: 5;
+    width: 100%;
+    background-color: rgb(255, 0, 255);
+}
+
+.description {
+    text-align: left;
+    position: relative;
+    background-color: black;
+}
+body {
+    background-color: rgb(17, 17, 17);
+}
+
+@media screen and (min-width: 768px) {
+    .description {
+        text-align: center;
+        position: absolute;
+        background-color: rgba(0, 0, 0, 0);
+    }
+}

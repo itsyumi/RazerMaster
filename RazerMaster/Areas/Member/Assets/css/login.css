@@ -1,0 +1,75 @@
+﻿body {
+    height: 100vh;
+    background-image: url("/Areas/Member/Assets/img/login/loginBackgroundIMG3.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+
+h3 {
+    color: white;
+}
+
+.form-row {
+    margin-top: 1rem;
+}
+
+.loginbox a {
+    color: #FF00FF;
+}
+
+.loginbox .btn {
+    background-color: black;
+    border-color: rgb(183,4,183);
+    width: 80%;
+}
+
+    .loginbox .btn:hover {
+        background-color: rgb(183,4,183);
+    }
+
+.loginbox .form-control {
+    margin: auto;
+}
+
+#Facebook {
+    background-color: #2B5C93;
+    border-color: transparent;
+}
+
+#Google {
+    background-color: #ED3739;
+    border-color: transparent;
+    margin-bottom: 1rem;
+}
+
+.loginbox {
+    background-color: rgba(17,17,17,.3);
+}
+
+.main-footer {
+    display: none;
+}
+
+.super_container {
+    display: none;
+}
+
+.logo {
+    padding-top: 20px;
+    display: flex;
+    padding-left: 20px;
+    padding-bottom: 15px;
+}
+
+@media screen and (max-width: 768px) {
+    .logo {
+        justify-content: center;
+    }
+}
+
+.loginbox input,
+.loginbox select,
+.loginbox textarea {
+    max-width: 280px;
+}

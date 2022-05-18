@@ -1,0 +1,44 @@
+﻿@{
+    //取得目前購物車
+    var cart = RazerMaster.Services.CartSerivce.GetCurrentCart();
+}
+
+
+@foreach (var pd in cart) /* 使用foreach將所有商品列出 */
+{
+    <!-- Cart Item -->
+    <div class="cart_item d-flex flex-lg-row flex-column align-items-lg-center align-items-start justify-content-start">
+
+        <input type="hidden" value="@pd.ProductID" />
+
+        <!-- Name -->
+        <div class="cart_item_product d-flex flex-row align-items-center justify-content-start">
+            <div class="cart_item_image">
+                <div class="border border-secondary"><img src="@pd.ImgUrl" alt=""></div>
+            </div>
+            <div class="cart_item_name_container">
+                <div class="cart_item_name"><a href="#">@pd.Name</a></div>
+            </div>
+        </div>
+        <!-- Price -->
+        <div class="cart_item_price">@pd.SalePrice</div>
+        <!-- Quantity -->
+        <div class="cart_item_quantity">
+            <div class="product_quantity_container">
+                <div class="product_quantity clearfix">
+                    <span>Qty</span>
+                    <input class="quantity_input" type="text" pattern="[0-9]*" value="@pd.Quantity" maxlength="2">
+                    <div class="quantity_buttons">
+                        <div class="quantity_inc_button quantity_inc quantity_control"><i class="fa fa-chevron-up" aria-hidden="true"></i></div>
+                        <div class="quantity_dec_button quantity_dec quantity_control"><i class="fa fa-chevron-down" aria-hidden="true"></i></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Total -->
+        <div class="cart_item_total">@pd.SubTotal</div>
+        <button class="btn btn-outline-danger btn-sm text-light ml-2" onclick="removeFromCart(@pd.ProductID)">X</button>
+    </div>
+}
+
+

@@ -1,0 +1,425 @@
+﻿@model RazerMaster.ViewModels.HomeIndexViewModel
+
+@{
+    ViewBag.Title = "Razer Master | For Gamers. By Gamers.";
+}
+
+@section topCSS{
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.2.1/assets/owl.carousel.css" integrity="sha512-2H3RwXVyqhq8zP1FRBlZ6oBU4NkyLjXNbcnSGnEuxR1SDOrL0SSIMNCp+PbHTUn8RYLbhGiK/pW8Ih2btTf0ng==" crossorigin="anonymous" />
+    <link href="~/Assets/Css/home/home.css" rel="stylesheet" />
+
+    <style>
+        body {
+            overflow-x: hidden;
+        }
+
+        .shop_grid_product_area_carousel {
+            position: relative;
+        }
+
+            .shop_grid_product_area_carousel .owl-nav {
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                right: 0;
+                left: 0;
+                height: 100%;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                z-index: -1;
+            }
+
+                .shop_grid_product_area_carousel .owl-nav .owl-prev,
+                .shop_grid_product_area_carousel .owl-nav .owl-next {
+                    display: flex;
+                    align-items: center;
+                    height: 270px;
+                    height: 100%;
+                    width: auto;
+                }
+
+            .shop_grid_product_area_carousel .nav-btn {
+                display: block !important;
+                cursor: pointer;
+                font-size: 75px;
+                color: #333;
+                transition: 0.2s;
+                letter-spacing: -20px;
+            }
+
+                .shop_grid_product_area_carousel .nav-btn:hover {
+                    color: #ccc;
+                }
+
+            .shop_grid_product_area_carousel .prev-slide {
+                transform: rotate(180deg) translateX(55px);
+            }
+
+            .shop_grid_product_area_carousel .next-slide {
+                transform: translateX(55px);
+            }
+
+        .home .owl-nav .owl-prev, .home .owl-nav .owl-next {
+            width: 34px;
+            height: 34px;
+            display: inline-block;
+            vertical-align: top;
+            color: #FFF;
+            font-size: 30px;
+            border-radius: 50%;
+            -webkit-border-radius: 50%;
+            -moz-border-radius: 50%;
+            position: absolute;
+            z-index: 10;
+            top: -30vh;
+            margin-top: -18px;
+            line-height: 34px;
+            text-align: center;
+            transition: all 0.3s;
+            -webkit-transition: all 0.3s;
+            -moz-transition: all 0.3s;
+            border: none;
+        }
+
+        .home .owl-nav .owl-prev {
+            left: 20px;
+        }
+
+        .home .owl-nav .owl-next {
+            right: 20px
+        }
+    </style>
+}
+
+<!-- Home -->
+
+<div class="home">
+    <div class="home_slider_container">
+        <!-- Home Slider -->
+        <div class="owl-carousel owl-theme home_slider">
+
+            @foreach (var ad in Model.AdCollection)
+            {
+                <!-- Slider Item -->
+                <div class="owl-item home_slider_item">
+                    <div class="home_slider_background" style="background-image: url(@ad.Picture)"></div>
+                    <div class="home_slider_content_container">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col">
+                                    <div class="home_slider_content" data-animation-in="fadeIn"
+                                         data-animation-out="animate-out fadeOut">
+                                        <div class="home_slider_title">A new Online Shop experience.</div>
+                                        <div class="home_slider_subtitle">@ad.Description</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+        </div>
+
+    </div>
+</div>
+
+<!-- New Arrive -->
+
+<div class="container mt-3 py-5">
+    <div class="container-title mb-5 h1 text-center">NEW ARRIVAL</div>
+    <div class="owl-carousel owl-theme shop_grid_product_area_carousel">
+
+        @foreach (var item in Model.ProductNewCollection)
+        {
+            string[] imgArray = item.Picture.Split(',');
+            var productTag = Model.TagCollection.FirstOrDefault(t => t.TagID == item.TagID);
+
+            <!-- Single Product -->
+            <div class="single-product-wrapper">
+
+                <a href="@Url.Action("ProductDetail", "Product", new { id=item.ProductID })">
+                    <!-- Product Image -->
+                    <div class="product-img">
+                        <img src="@imgArray[0]" alt="">
+                        <!-- Hover Thumb -->
+                        @if (imgArray.Length > 1)
+                        {
+                            var img2 = imgArray[1];
+                            <img class="hover-img" src="@imgArray[1]" alt="">
+                        }
+                        <!-- Product Badge -->
+                        <div class="product-badge offer-badge">
+                            <span>@Function.GetPricePercentage(item.OriginalPrice, item.SalePrice)</span>
+                        </div>
+                        @if (productTag != null)
+                        {
+                            <div class="product-badge" style="left:unset;right:20px;background-color:@productTag.TagColor;">
+                                <span>@productTag.TagName</span>
+                            </div>
+                        }
+                    </div>
+                </a>
+
+                <!-- Product Description -->
+                <div class="product-description">
+                    <a href="@Url.Action("ProductDetail", "Product", new { id=item.ProductID })">
+                        <h6>@item.ProductName</h6>
+                        <p class="product-item" style="visibility:hidden">@item.ProductID</p>
+                        <p class="product-price">$@item.SalePrice <span class="old-price">@(Function.GetPricePercentage(item.OriginalPrice, item.SalePrice)==String.Empty ? String.Empty: "$"+@item.OriginalPrice)</span></p>
+                    </a>
+                    <!-- Hover Content -->
+                    <div class="hover-content">
+                        <!-- Add to Cart -->
+                        <div class="add-to-cart-btn">
+                            @if (item.Stock > 0)
+                            {
+                                <button class="btn essence-btn" onclick="addToCart(@item.ProductID,1)">Add to Cart</button>
+                            }
+                            else
+                            {
+                                <button type="button" class="btn essence-btn text-danger">Sold Out</button>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        }
+
+    </div>
+</div>
+
+<!-- Best Seller -->
+
+<div class="container mt-3 mb-5 pb-5">
+    <div class="container-title mb-5 h1 text-center">BEST SELLER</div>
+    <div class="owl-carousel owl-theme shop_grid_product_area_carousel">
+
+        @foreach (var item in Model.ProductHotCollection)
+        {
+            string[] imgArray = item.Picture.Split(',');
+            var productTag = Model.TagCollection.FirstOrDefault(t => t.TagID == item.TagID);
+
+            <!-- Single Product -->
+            <div class="single-product-wrapper">
+
+                <a href="@Url.Action("ProductDetail", "Product", new { id=item.ProductID })">
+                    <!-- Product Image -->
+                    <div class="product-img">
+                        <img src="@imgArray[0]" alt="">
+                        <!-- Hover Thumb -->
+                        @if (imgArray.Length > 1)
+                        {
+                            var img2 = imgArray[1];
+                            <img class="hover-img" src="@imgArray[1]" alt="">
+                        }
+                        <!-- Product Badge -->
+                        <div class="product-badge offer-badge">
+                            <span>@Function.GetPricePercentage(item.OriginalPrice, item.SalePrice)</span>
+                        </div>
+                        @if (productTag != null)
+                        {
+                            <div class="product-badge" style="left:unset;right:20px;background-color:@productTag.TagColor;">
+                                <span>@productTag.TagName</span>
+                            </div>
+                        }
+                    </div>
+                </a>
+
+                <!-- Product Description -->
+                <div class="product-description">
+                    <a href="@Url.Action("ProductDetail", "Product", new { id=item.ProductID })">
+                        <h6>@item.ProductName</h6>
+                        <p class="product-item" style="visibility:hidden">@item.ProductID</p>
+                        <p class="product-price">$@item.SalePrice <span class="old-price">@(Function.GetPricePercentage(item.OriginalPrice, item.SalePrice)==String.Empty ? String.Empty: "$"+@item.OriginalPrice)</span></p>
+                    </a>
+                    <!-- Hover Content -->
+                    <div class="hover-content">
+                        <!-- Add to Cart -->
+                        <div class="add-to-cart-btn">
+                            @if (item.Stock > 0)
+                            {
+                                <button class="btn essence-btn" onclick="addToCart(@item.ProductID,1)">Add to Cart</button>
+                            }
+                            else
+                            {
+                                <button type="button" class="btn essence-btn text-danger">Sold Out</button>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        }
+
+    </div>
+</div>
+
+<!-- Ads -->
+
+<div class="avds container my-5">
+    <div class="avds_container d-flex flex-lg-row flex-column align-items-start justify-content-between">
+        <div class="avds_small">
+            <div class="avds_background">
+                <img src="~/Assets/Img/ad2.jpg" class="w-100" />
+            </div>
+        
+        </div>
+        <div class="avds_large">
+            <div class="avds_background">
+                <img src="~/Assets/Img/ad1.jpg" class="w-100" />
+            </div>
+            <div class="avds_large_container">
+                <div class="avds_large_content">
+                    <div class="avds_title">MORE FRAMES. MORE SPEED.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Icon Boxes -->
+
+<div class="icon_boxes mt-3 py-5">
+    <div class="container">
+        <div class="row icon_box_row d-flex justify-content-between">
+
+            <!-- Icon Box -->
+            <div class="col-lg-3 icon_box_col">
+                <div class="icon_box">
+                    <div class="icon_box_image">
+                        <img src="https://colorlib.com/preview/theme/sublime/images/icon_1.svg" alt="">
+                    </div>
+                    <div class="icon_box_title">Free Shipping Worldwide</div>
+                    <div class="icon_box_text">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Icon Box -->
+            <div class="col-lg-3 icon_box_col">
+                <div class="icon_box">
+                    <div class="icon_box_image">
+                        <img src="https://colorlib.com/preview/theme/sublime/images/icon_2.svg" alt="">
+                    </div>
+                    <div class="icon_box_title">Free Returns</div>
+                    <div class="icon_box_text">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Icon Box -->
+            <div class="col-lg-3 icon_box_col">
+                <div class="icon_box">
+                    <div class="icon_box_image">
+                        <img src="https://colorlib.com/preview/theme/sublime/images/icon_3.svg" alt="">
+                    </div>
+                    <div class="icon_box_title">24h Fast Support</div>
+                    <div class="icon_box_text">
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section endJS{
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.2.1/owl.carousel.js" integrity="sha512-3J4luatr5PhoGf9jQjLoPpGa+t78QHzwIS2aGBdOZqjRmfbZ03YsPWvd/KZRm/Frd/eh97azy0nPkyvmdTOeXQ==" crossorigin="anonymous"></script>
+    
+    <script>
+        var count = 0;
+        window.onload = function () {
+            $('.shop_grid_product_area_carousel').owlCarousel({
+                loop: true,
+                nav: true,
+                autoplay: true,
+                autoplayTimeout: 5000,
+                navText: ['<span class="nav-btn prev-slide">〉</span>', '<span class="nav-btn next-slide">〉</span>'],
+                margin: 30,
+                lazyLoad: true,
+                responsive: {
+                    0: {
+                        items: 1
+                    },
+                    576: {
+                        items: 2
+                    },
+                    992: {
+                        items: 4
+                    }
+                }
+            });
+            count++;
+        };
+
+        initHomeSlider();
+
+        function initHomeSlider() {
+            if ($('.home_slider').length) {
+                var homeSlider = $('.home_slider');
+                homeSlider.owlCarousel(
+                    {
+                        items: 1,
+                        autoplay: true,
+                        autoplayTimeout: 5000,
+                        loop: true,
+                        nav: true,
+                        dots: false,
+                        smartSpeed: 1200,
+                        dotsSpeed: 1200,
+                        fluidSpeed: 1200,
+                        navText: ['<i class="fa fa-angle-left" aria-hidden="true"></i>', '<i class="fa fa-angle-right" aria-hidden="true"></i>']
+                    });
+
+                /* Custom dots events */
+                if ($('.home_slider_custom_dot').length) {
+                    $('.home_slider_custom_dot').on('click', function () {
+                        $('.home_slider_custom_dot').removeClass('active');
+                        $(this).addClass('active');
+                        homeSlider.trigger('to.owl.carousel', [$(this).index(), 1200]);
+                    });
+                }
+
+                /* Change active class for dots when slide changes by nav or touch */
+                homeSlider.on('changed.owl.carousel', function (event) {
+                    $('.home_slider_custom_dot').removeClass('active');
+                    $('.home_slider_custom_dots li').eq(event.page.index).addClass('active');
+                });
+
+                // add animate.css class(es) to the elements to be animated
+                function setAnimation(_elem, _InOut) {
+                    // Store all animationend event name in a string.
+                    // cf animate.css documentation
+                    var animationEndEvent = 'webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
+
+                    _elem.each(function () {
+                        var $elem = $(this);
+                        var $animationType = 'animated ' + $elem.data('animation-' + _InOut);
+
+                        $elem.addClass($animationType).one(animationEndEvent, function () {
+                            $elem.removeClass($animationType); // remove animate.css Class at the end of the animations
+                        });
+                    });
+                }
+
+                // Fired before current slide change
+                homeSlider.on('change.owl.carousel', function (event) {
+                    var $currentItem = $('.home_slider_item', homeSlider).eq(event.item.index);
+                    var $elemsToanim = $currentItem.find("[data-animation-out]");
+                    setAnimation($elemsToanim, 'out');
+                });
+
+                // Fired after current slide has been changed
+                homeSlider.on('changed.owl.carousel', function (event) {
+                    var $currentItem = $('.home_slider_item', homeSlider).eq(event.item.index);
+                    var $elemsToanim = $currentItem.find("[data-animation-in]");
+                    setAnimation($elemsToanim, 'in');
+                })
+            }
+        }
+
+    </script>
+}

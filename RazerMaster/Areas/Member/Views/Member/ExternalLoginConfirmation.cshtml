@@ -1,0 +1,57 @@
+﻿@model RazerMaster.Areas.Member.ViewModels.ExternalLoginConfirmationViewModel
+@{
+    ViewBag.Title = "Login";
+}
+@section topCSS{
+    <link href="~/Areas/Member/Assets/css/login.css" rel="stylesheet" />
+    <style>
+    </style>
+}
+<div class="logo">
+    <a href="/">
+        <img src="/Assets/Img/RazerMasterLogo4.svg" alt="" srcset="">
+    </a>
+</div>
+
+<div class="contatiner">
+    <div class="form-row d-flex flex-column align-content-center ">
+        <div class="col-md-4 loginbox text-center">
+            <h3>Connect your @ViewBag.LoginProvider account</h3>
+            @using (Html.BeginForm("ExternalLoginConfirmation", "Member", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            {
+                @Html.AntiForgeryToken()
+
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="form-group">
+                    @Html.LabelFor(m => m.RealName, new { @class = "control-label razer-purple" })
+                    <div>
+                        @Html.TextBoxFor(m => m.RealName, new { @class = "form-control", @placeholder = "Real Name" })
+                        @Html.ValidationMessageFor(m => m.RealName, "", new { @class = "text-danger" })
+                    </div>
+                    @Html.LabelFor(m => m.Email, new { @class = "control-label razer-purple" })
+                    <div>
+                        @Html.TextBoxFor(m => m.Email, new { @class = "form-control", @readonly = "true" })
+                        @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+                    </div>
+                    @Html.LabelFor(m => m.Nick, new { @class = "control-label razer-purple" })
+                    <div>
+                        @Html.TextBoxFor(m => m.Nick, new { @class = "form-control", @placeholder = "Nick Name" })
+                        @Html.ValidationMessageFor(m => m.Nick, "", new { @class = "text-danger" })
+                    </div>
+
+                </div>
+                <div class="form-group">
+                    <div>
+                        <button type="submit" class="btn btn-primary col-md-4">Sign in</button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

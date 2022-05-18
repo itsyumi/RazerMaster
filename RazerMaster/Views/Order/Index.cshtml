@@ -1,0 +1,247 @@
+﻿@model RazerMaster.Models.Order.Ship
+
+@{
+    //顯示當前購物車所有內容
+    var currentCurt = RazerMaster.Services.CartSerivce.GetCurrentCart();
+}
+
+@section topCSS{
+    <link href="~/Assets/Css/cart/cart.css" rel="stylesheet" />
+    <link href="~/Assets/Css/cart/cart_responsive.css" rel="stylesheet" />
+
+    <style>
+    .checkbox {
+        visibility: hidden;
+    }
+
+        #btn-box {
+            display: inline-block;
+            vertical-align: middle;
+            width: 40px;
+            height: 20px;
+            border-radius: 100px;
+            background-color: #ccc;
+            box-shadow: 0px 3px 0px rgba(0,0,0,.13) inset;
+        }
+
+            #btn-box #btn {
+                display: inline-block;
+                width: 20px;
+                height: 20px;
+                border-radius: 50%;
+                background-color: #fff;
+                margin-left: 0; /*動畫從ml為0開始*/
+                transition: .3s;
+                box-shadow: 1px 2px 5px rgba(0,0,0,.3);
+            }
+    @*讓couponModal可以被點擊*@
+        .modal-backdrop {
+            z-index: -1;
+        }
+
+        .unselectable {
+            background-color: #ddd;
+            cursor: not-allowed;
+        }
+
+            .unselectable input {
+                pointer-events: none;
+            }
+    </style>
+}
+
+
+<div class="cart_info">
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <!-- Column Titles -->
+                <div class="cart_info_columns clearfix">
+                    <div class="cart_info_col cart_info_col_product">Product</div>
+                    <div class="cart_info_col cart_info_col_price">Price</div>
+                    <div class="cart_info_col cart_info_col_quantity">Quantity</div>
+                    <div class="cart_info_col cart_info_col_total">Total</div>
+                </div>
+            </div>
+        </div>
+        <div class="row cart_items_row">
+            <div class="col" id="OrderList">
+
+                @Html.Partial("_OrderPartial")
+
+            </div>
+        </div>
+        <div class="row row_cart_buttons">
+            <div class="col">
+                <div class="cart_buttons d-flex flex-lg-row flex-column align-items-start justify-content-start">
+                    <div class="button continue_shopping_button button_light">
+                        @Html.ActionLink("Continue shopping", "Index", "Product");
+                    </div>
+                    <div class="cart_buttons_right ml-lg-auto">
+                        <div class="button clear_cart_button button_light">
+                            <a href="#" onclick="clearCart()">Clear cart</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row row_extra">
+            <div class="col-lg-4"></div>
+            <div class="col-lg-6 offset-lg-2">
+                <div class="cart_total">
+                    <div class="section_title">Your Order</div>
+                    <div class="section_subtitle">The Details</div>
+
+                    <div class="cart_total_container" id="cart_total_container">
+                        @Html.Partial("_OrderDetailPartial")
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container">
+    @using (Html.BeginForm("PostToECPay", "Order", FormMethod.Post, new { id = "checkout_form", @class = "checkout_form text-align-center" }))
+    {
+
+        @*@Html.CheckBoxFor(model => model.CoinDiscount, new { @class = "checkbox" });*@
+        <input type="checkbox" id="CoinDiscount" name="CoinDiscount" value="false" class="checkbox" />
+        <div class="row mb-5">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div>
+                        <!-- Name -->
+                        @Html.LabelFor(model => model.RecieverName)
+                        @Html.EditorFor(model => model.RecieverName, new { htmlAttributes = new { @class = "checkout_input form-control", @Value = ViewBag.Name } })
+                        @Html.ValidationMessageFor(model => model.RecieverName, "", new { @class = "text-danger" })
+                    </div>
+                    <div>
+                        <!-- Phone no -->
+                        @Html.LabelFor(model => model.RecieverPhone)
+                        @Html.EditorFor(model => model.RecieverPhone, new { htmlAttributes = new { @class = "checkout_input form-control", @Value = ViewBag.Phone } })
+                        @Html.ValidationMessageFor(model => model.RecieverPhone, "", new { @class = "text-danger" })
+                    </div>
+                    <div>
+                        <!-- Address -->
+                        @Html.LabelFor(model => model.RecieverAddress)
+                        @Html.EditorFor(model => model.RecieverAddress, new { htmlAttributes = new { @class = "checkout_input form-control", @Value = ViewBag.Address } })
+                        @Html.ValidationMessageFor(model => model.RecieverAddress, "", new { @class = "text-danger" })
+                    </div>
+                    <div>
+                        <!-- Email -->
+                        @Html.LabelFor(model => model.RecieverEmail)
+                        @Html.EditorFor(model => model.RecieverEmail, new { htmlAttributes = new { @class = "checkout_input form-control" } })
+                        @Html.ValidationMessageFor(model => model.RecieverEmail, "", new { @class = "text-danger" })
+                    </div>
+                    <div>
+                        <!-- City / Town -->
+                        <label for="checkout_city">Ship Way</label>
+                        @Html.DropDownListFor(model => model.ShipWay, (List<SelectListItem>)ViewBag.shipWayOptions, htmlAttributes: new { id = "checkout_ship", @class = "form-control" })
+
+                    </div>
+
+                    <!-- City / Town -->
+                    @Html.LabelFor(model => model.Note)
+                    @Html.EditorFor(model => model.Note, new { htmlAttributes = new { @class = "form-control" } })
+
+                    <input type="hidden" id="Code" name="Code" value="" />
+
+                </div>
+            </div>
+
+
+            <div class="col-md-6 d-flex flex-direction-column justify-content-start justify-content-md-center align-items-stretch mt-2">
+
+
+                <div class="form-group">
+                    <div class="mb-2 border-bottom">
+                        <label>Payment Way</label>
+                    </div>
+                    <div>
+                        @Html.RadioButtonFor(model => model.PaymentWay, "1", htmlAttributes: new { id = "CreditCard", @checked = "checked" })
+                        @Html.Label("CreditCard")
+                    </div>
+                    <div>
+                        @Html.RadioButtonFor(model => model.PaymentWay, "2", htmlAttributes: new { id = "DirectBankTransfer" })
+                        @Html.Label("DirectBankTransfer")
+                    </div>
+                    <div>
+                        @Html.RadioButtonFor(model => model.PaymentWay, "3", htmlAttributes: new { id = "ATM" })
+                        @Html.Label("ATM")
+                    </div>
+                    <div>
+                        @Html.RadioButtonFor(model => model.PaymentWay, "4", htmlAttributes: new { id = "BusinessCode" })
+                        @Html.Label("BusinessCode")
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+        <div class="button checkout_button button_light mt-3">
+            <a href="#!" onclick="this.closest('form').submit(); return false;">
+                Proceed to checkout
+            </a>
+        </div>
+        <!-- Billing Info -->
+    }
+</div>
+
+
+
+
+@section endJS{
+
+    <script>
+        function coupon () {
+            var total = 0;
+            $.each($(".cart_item_total"), function (key, value) {
+                total = total + parseFloat($(this).text());
+            });
+            var checkedCouponDiscount = $('[name=couponSelect]:checked').val()
+            if (checkedCouponDiscount < 1)
+            { totalPriceAfterCoupon = total * checkedCouponDiscount }
+            else
+            { totalPriceAfterCoupon = total - checkedCouponDiscount }
+
+            var CouponDiscount = total - totalPriceAfterCoupon;
+            $('#CouponDiscount a').text(`$${(CouponDiscount).toFixed(2)}`)
+            $("#OrderTotal").text((total - CouponDiscount - $("#Discount").text()).toFixed(2))
+            //啟動Form 裡的input 回傳給後端
+         $('[name=Code]').val($('[name=couponSelect]:checked').attr('id'));
+
+
+
+        }
+        //目前沒有取消coupon的功能(按f5會取消)，以後再看看要不要加
+
+
+
+
+
+        $('#CoinDiscount').change(function () {
+            var CouponDiscount = $('#CouponDiscount a').text().replace("$", "")
+            if (CouponDiscount.includes("choose")) { CouponDiscount = 0 };
+            var total = 0;
+            $.each($(".cart_item_total"), function (key, value) {
+                total = total + parseFloat($(this).text());
+            });
+            if ($(this).is(':checked')) {
+                $("#Discount").text((@ViewBag.CoinDiscount).toFixed(2));
+                $("#OrderTotal").text((total - CouponDiscount -@ViewBag.CoinDiscount).toFixed(2))
+                $("#btn-box").css("background", "#ffc107");
+                $("#btn").css("margin-left", "20px");
+                $('#CoinDiscount').val('true');
+
+            } else {
+                $("#Discount").text(0);
+                $("#OrderTotal").text((total - CouponDiscount).toFixed(2))
+                $("#btn-box").css("background", "#ccc");
+                $("#btn").css("margin-left", "0px");
+                $('#CoinDiscount').val('false');
+            }
+        });
+    </script>
+
+}

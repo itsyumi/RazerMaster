@@ -1,0 +1,124 @@
+﻿@charset "UTF-8";
+* {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+  font-family: 'Noto Sans TC', sans-serif;
+}
+
+a {
+  text-decoration: none;
+}
+
+/*垂直置中*/
+.main-footer {
+/*  height: 100vh;*/
+  padding: 50px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  background: #000000;
+}
+
+/*.main-footer > .container {
+    line-height:2px;
+    border-top: 2px solid#fff;
+}
+*/
+/*
+.copyright {
+  position:fixed; 
+  bottom:0; 
+  width: 100%;
+  display: block;
+  padding: 10px 0;
+  text-align: center;
+}*/
+
+
+/*.subscribe h4 {
+    margin-bottom: .3em;
+    font-weight: 500;
+    font-size: 24px;
+    color: white;
+}
+
+.subscribe h4:after {
+    content: '';
+    display: block;
+    height: 1px;
+    background-color: #fff;
+    width: 0;
+    -webkit-transform: width .3s;
+    transform: width .3s;
+    -webkit-transition: .4s;
+    transition: .4s;
+
+    width: 100%;
+}*/
+nav {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+nav a {
+  color: white;
+  line-height: 1.4;
+  padding: 5px 0;
+}
+
+/*.subscribe {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+.subscribe form {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  width: 100%;
+  margin: auto 0px;
+}*/
+
+/*.subscribe form input[type="text"], .subscribe form input[type="submit"] {
+  border: none;
+  padding: 5px 10px;
+}
+
+.subscribe form input[type="text"] {
+  width: 0;
+  -webkit-box-flex: 1;
+      -ms-flex-positive: 1;
+          flex-grow: 1;
+}
+
+.subscribe form input[type="submit"] {
+  color: #fff;
+  background-color: #3e5293;
+}*/
+/*# sourceMappingURL=style.css.map */
+
+
+.col-md-3{
+    text-align:center;
+}

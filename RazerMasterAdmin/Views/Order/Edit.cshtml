@@ -1,0 +1,172 @@
+﻿@model RazerMasterLibrary.Models.Orders
+
+@{
+    List<RazerMasterAdmin.ViewModels.OrderViewModel> Products = ViewBag.products;
+    RazerMasterLibrary.Models.Coupons Coupon = ViewBag.coupon;
+    ViewBag.CouponName = Coupon == null ? "" : Coupon.Code;
+    ViewBag.PaymentTotal = Coupon == null ? Model.TotalPrice - Model.CoinDiscount  : RazerMasterAdmin.Functions.Functions.
+        GetPaymentTotal(Model.CoinDiscount, Coupon.Discount, Model.TotalPrice, Coupon.Is_Fixed);
+    ViewBag.CouponDiscountTotal = Coupon == null ? 0.0m : RazerMasterAdmin.Functions.Functions.
+        GetDiscountTotal(Coupon.Discount, Model.TotalPrice, Coupon.Is_Fixed);
+}
+<div class="content">
+    <div class="animated fadeIn">
+        <div class="row justify-content-center">
+            <div class="col-10">
+                <div class="card border-secondary mb-3">
+                    <div class="card-header h5 font-weight-bold">Edit Order</div>
+                    <div class="card-body text-secondary">
+                        @using (Html.BeginForm())
+                        {
+                            @Html.HiddenFor(model => model.OrderID) //避免更新資料時遺失ID
+
+                            @Html.AntiForgeryToken()
+                            <div class="form-group row">
+                                <label for="oID" class="col-sm-2 col-form-label">Order ID</label>
+                                <div class="col-sm-10">
+                                    @Html.EditorFor(model => model.OrderID, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="OrderTime" class="col-sm-2 col-form-label">Order Date</label>
+                                <div class="col-sm-4">
+                                    @Html.EditorFor(model => model.OrderTime, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                </div>
+                                <label for="UserID" class="col-sm-2 col-form-label">UserID</label>
+                                <div class="col-sm-4">
+                                    @Html.EditorFor(model => model.UserID, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="oPayment" class="col-sm-2 col-form-label text-danger">Payment</label>
+                                <div class="col-sm-4">
+                                    @Html.Editor("PaymentTotal", new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                </div>
+                                <label for="oDiscount" class="col-sm-2 col-form-label text-danger">Razer Coin Discount</label>
+                                <div class="col-sm-4">
+                                    @Html.EditorFor(model => model.CoinDiscount, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                </div>
+                                <label for="oDiscount" class="col-sm-2 col-form-label text-danger">Coupon Discount</label>
+                                <div class="col-sm-4">
+                                    @Html.Editor("CouponDiscountTotal", new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                </div>
+                                <label for="oDiscount" class="col-sm-2 col-form-label text-danger">Coupon Name</label>
+                                <div class="col-sm-4">
+                                    @Html.Editor("CouponName", new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="cusName" class="col-sm-2 col-form-label">Customer Name</label>
+                                <div class="col-sm-4">
+                                    @Html.EditorFor(model => model.CustomerName, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                </div>
+
+                                <label for="cusPhone" class="col-sm-2 col-form-label">Customer Phone</label>
+                                <div class="col-sm-4">
+                                    @Html.EditorFor(model => model.CustomerTel, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.CustomerTel, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="cusAddress" class="col-sm-2 col-form-label">Customer Address</label>
+                                <div class="col-sm-10">
+                                    @Html.EditorFor(model => model.CustomerAddress, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.CustomerAddress, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="cusEmail" class="col-sm-2 col-form-label">Customer Email</label>
+                                <div class="col-sm-10">
+                                    @Html.EditorFor(model => model.CustomerEmail, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.CustomerEmail, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="oNote" class="col-sm-2 col-form-label">Note</label>
+                                <div class="col-sm-10">
+                                    @Html.EditorFor(model => model.Note, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="" class="col-sm-2 col-form-label">Order Status</label>
+                                <div class="col-sm-10 order-status">
+                                    @if (Model.Status == 1 || Model.Status == 2)
+                                    {
+                                        <div class="form-check form-check-inline mt-1">
+                                            @Html.RadioButtonFor(model => model.Status, "-2", htmlAttributes: new { @class = "form-check-input", @disabled = "disabled" })Waiting
+                                        </div>
+                                        <div class="form-check form-check-inline mt-1">
+                                            @Html.RadioButtonFor(model => model.Status, "-1", htmlAttributes: new { @class = "form-check-input", @disabled = "disabled" })Cancel
+                                        </div>
+                                        <div class="form-check form-check-inline mt-1">
+                                            @Html.RadioButtonFor(model => model.Status, "0", htmlAttributes: new { @class = "form-check-input", @disabled = "disabled" })Pending
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="form-check form-check-inline mt-1">
+                                            @Html.RadioButtonFor(model => model.Status, "-2", htmlAttributes: new { @class = "form-check-input" })Waiting
+                                        </div>
+                                        <div class="form-check form-check-inline mt-1">
+                                            @Html.RadioButtonFor(model => model.Status, "-1", htmlAttributes: new { @class = "form-check-input" })Cancel
+                                        </div>
+                                        <div class="form-check form-check-inline mt-1">
+                                            @Html.RadioButtonFor(model => model.Status, "0", htmlAttributes: new { @class = "form-check-input" })Pending
+                                        </div>
+                                    }
+                                    <div class="form-check form-check-inline mt-1">
+                                        @Html.RadioButtonFor(model => model.Status, "1", htmlAttributes: new { @class = "form-check-input", @disabled = "disabled" })Done
+                                    </div>
+                                    <div class="form-check form-check-inline mt-1">
+                                        @Html.RadioButtonFor(model => model.Status, "2", htmlAttributes: new { @class = "form-check-input", @disabled = "disabled" })Delivered
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="oNote" class="col-sm-2 col-form-label">Order Detail</label>
+                                <div class="col-sm-10">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>Product Name</th>
+                                                <th>UnitPrice</th>
+                                                <th>Quantity</th>
+                                                <th>Total</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var p in Products)
+                                            {
+                                                <tr>
+                                                    <td>@p.ProductName</td>
+                                                    <td>@p.UnitPrice</td>
+                                                    <td>@p.Quantity</td>
+                                                    <td>@p.Total</td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <div class="form-group row justify-content-end">
+                                <div class="col-sm-5 d-flex justify-content-end">
+                                    <input type="submit" class="btn btn-info m-1" value="Modify" />
+                                    <a class="btn btn-secondary m-1" href="@Url.Action("Index", "Order")" role="button">Cancel</a>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div><!-- .animated -->
+</div>

@@ -1,0 +1,75 @@
+﻿@model RazerMaster.ViewModels.PromotionViewModel
+
+@{
+    ViewBag.Title = "Promotions";
+}
+@section topCSS{
+    <link href="~/Assets/Css/promotions/core-style.css" rel="stylesheet" />
+    <link href="~/Assets/Css/promotions/promotions.css" rel="stylesheet" />
+
+}
+
+<div style="background-color: black; height: 500px;">
+    <div class="container h-100" style="position: relative;">
+        <img src="~/Assets/Img/RazerMasterLogo4.svg"
+             style="position: absolute; top: 0; bottom: 0; right: 0; left: 0; margin: auto;" alt="">
+    </div>
+</div>
+
+<!-- ##### Breadcumb Area End ##### -->
+<!-- ##### Blog Wrapper Area Start ##### -->
+<div class="blog-wrapper section-padding-80">
+    <div class="container">
+        <div class="row">
+            @foreach (var item in Model.Promotions)
+            {
+                <!-- Single Blog Area -->
+                <div class="col-12 col-lg-6">
+                    <div class="single-blog-area mb-50">
+                        <img src="@item.Picture" alt="">
+                        <!-- Post Title -->
+                        <div class="post-title">
+                            <h2>@item.EventName</h2>
+                        </div>
+                        <!-- Hover Content -->
+                        <div class="hover-content">
+                            <!-- Post Title -->
+                            <div class="hover-post-title">
+                                <h3 data-toggle="modal" data-target="#promotion-@item.EventID">
+                                    @item.EventName
+                                </h3>
+                            </div>
+                            <a href="#" data-toggle="modal" data-target="#promotion-@item.EventID">
+                                Continue reading <i class="fa fa-angle-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@foreach (var item in Model.Promotions)
+{
+<div class="modal fade" id="promotion-@item.EventID" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">@item.EventName</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <img src="@item.Picture" alt="">
+                @Html.Raw(item.Description)
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+}
+

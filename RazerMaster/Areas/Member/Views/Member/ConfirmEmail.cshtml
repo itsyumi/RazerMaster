@@ -1,0 +1,24 @@
+﻿@{
+    ViewBag.Title = "confirming your email";
+}
+@section topCSS{
+    <style>
+        .confirming h2 {
+            color: white
+        }
+        .confirming p {
+            color: #999999
+        }
+        .confirming a {
+            color: #FF00FF;
+        }
+    </style>
+}
+<div class="container confirming">
+    <h2>@ViewBag.Title</h2>
+    <p>
+        Thank you for confirming your email. Please @Html.ActionLink("Click here to Log in", "Login", "Member", routeValues: null, htmlAttributes: new { id = "loginLink" })
+    </p>
+</div>
+
+

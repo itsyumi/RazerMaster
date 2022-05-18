@@ -1,0 +1,50 @@
+﻿@{
+    //顯示當前購物車所有內容
+    var currentCurt = RazerMaster.Services.CartSerivce.GetCurrentCart();
+}
+
+<div class="dropdown show">
+
+    <a id="CartDropDown" class="dropdown-toggle text-light" data-toggle="dropdown">
+        <i class="fa fa-shopping-cart razer-purple"></i>
+        @(string.Format("${0} ({1})",currentCurt.TotalAmount,currentCurt.Count))<span class="cart"></span>
+    </a>
+
+
+    <ul class="dropdown-menu bg-dark" role="menu" aria-labelledby="CartDropDown" id="CartList">
+        @if (currentCurt.Count > 0)
+        {
+            foreach (var cartItem in currentCurt)
+            {
+                <li class="border-top border-secondary">
+                    <a href="#!" class="dropdown-item">
+                        <div class="cartItemName text-light">@cartItem.Name</div>
+                        <div class="mt-2 border border-secondary" style="height:52px;width:75px"><img src="@cartItem.ImgUrl" style="width:100%" alt="" /></div>
+                        <div class="row">
+                            <div class="col-10 font-weight-bold" style="color:#ff00ff">$@cartItem.SalePrice X @cartItem.Quantity</div>
+                            <div class="col-2 btn btn-danger btn-sm" onclick="removeFromCart(@cartItem.ProductID)">X</div>
+                        </div>
+                    </a>
+                </li>
+            }
+
+            <li class="dropdown-divider border-danger"></li>
+            <li>
+                <div class="row justify-content-center">
+                    <div class="col-5">
+                        @Html.ActionLink("Checkout", "Index", "Order",  new { area = "" }, htmlAttributes: new { @class = "btn btn-info text-center" })
+                    </div>
+                    <div class="col-5">
+                        <a href="#!" class="btn btn-danger text-center" onclick="clearCart()">Clear All</a>
+                    </div>
+                </div>
+            </li>
+        }
+        else
+        {
+            <li><a href="@Url.Action("Index","Product")" class="text-light text-center dropdown-item">YOU HAVE NO ITEMS IN YOUR SHOPPING CART.</a></li>
+        }
+
+
+    </ul>
+</div>

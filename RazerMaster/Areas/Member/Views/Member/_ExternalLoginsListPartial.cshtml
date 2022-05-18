@@ -1,0 +1,31 @@
+﻿@model RazerMaster.Areas.Member.ViewModels.ExternalLoginListViewModel
+@using Microsoft.Owin.Security
+
+<hr />
+@{
+    var loginProviders = Context.GetOwinContext().Authentication.GetExternalAuthenticationTypes();
+    if (loginProviders.Count() == 0)
+    {
+        <div>
+            <p>
+                未設定任何外部驗證服務。如需設定此 ASP.NET 應用程式
+                以支援透過外部服務登入的詳細資料，請參閱<a href="https://go.microsoft.com/fwlink/?LinkId=403804">此文章</a>。
+            </p>
+        </div>
+    }
+    else
+    {
+        using (Html.BeginForm("ExternalLogin", "Member", new { ReturnUrl = Model.ReturnUrl }))
+        {
+            @Html.AntiForgeryToken()
+            <div id="socialLoginList">
+                <p>
+                    @foreach (AuthenticationDescription p in loginProviders)
+                    {
+                        <button type="submit" class="btn btn-primary"  id="@p.AuthenticationType" name="provider" value="@p.AuthenticationType" title="使用 @p.Caption 帳戶登入">Sign in with @p.AuthenticationType</button>
+                    }
+                </p>
+            </div>
+        }
+    }
+}

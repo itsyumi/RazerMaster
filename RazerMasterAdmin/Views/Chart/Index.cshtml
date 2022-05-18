@@ -1,0 +1,189 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+    var reMonthANLS = ViewBag.reMonthANLS;
+    var PieMember = ViewBag.PieMember;
+    var LineCount = ViewBag.LineCount;
+    var LineTotal = ViewBag.LineTotal;
+}
+
+
+<!-- content Start -->
+<div class="content">
+    <div class="animated fadeIn">
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="mb-3">Purcahse Analysis within 4 months</h4>
+                        <canvas id="barChart"></canvas>
+                    </div>
+                </div>
+            </div><!-- /# column -->
+
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="mb-3">Month Revenue within 3 months</h4>
+                        <canvas id="lineChart"></canvas>
+                    </div>
+                </div>
+            </div><!-- /# column -->
+            <!-- /# column -->
+
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="mb-3">Member Increase</h4>
+                        <canvas id="pieChart"></canvas>
+                    </div>
+                </div>
+            </div><!-- /# column -->
+
+
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="mb-3">Week Sales</h4>
+                        <canvas id="singelBarChart"></canvas>
+                    </div>
+                </div>
+            </div><!-- /# column -->
+        </div>
+    </div><!-- .animated -->
+</div>
+<!-- content Start -->
+
+
+
+
+@section endJS{
+    <script>
+    (function ($) {
+    "use strict";
+
+    //line chart
+    var ctx = document.getElementById("lineChart");
+    ctx.height = 150;
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: @Html.Raw(Json.Encode(LineTotal.Date)),
+            datasets: [
+                {
+                    label: "Sales Volume",
+                    borderColor: "rgba(0,0,0,.09)",
+                    borderWidth: "1",
+                    backgroundColor: "rgba(0, 194, 146, 0.5)",
+                    data: @Html.Raw(Json.Encode(LineTotal.Data))
+                },
+            ]
+        },
+        options: {
+            responsive: true,
+            tooltips: {
+                mode: 'index',
+                intersect: false
+            },
+            hover: {
+                mode: 'nearest',
+                intersect: true
+            }
+        }
+    });
+
+
+    //bar chart
+    var ctx = document.getElementById("barChart");
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: @Html.Raw(Json.Encode(reMonthANLS.Date)),
+            datasets: [
+                {
+                    label: "First Purchase",
+                    data: @Html.Raw(Json.Encode(reMonthANLS.FirstData)),
+                    borderColor: "rgba(0, 194, 146, 0.9)",
+                    borderWidth: "0",
+                    backgroundColor: "rgba(0, 194, 146, 0.5)"
+                },
+                {
+                    label: "Repurchase",
+                    data: @Html.Raw(Json.Encode(reMonthANLS.SecondData)),
+                    borderColor: "rgba(0,0,0,0.09)",
+                    borderWidth: "0",
+                    backgroundColor: "rgba(0,0,0,0.07)"
+                }
+            ]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+
+    //pie chart
+    var ctx = document.getElementById("pieChart");
+    ctx.height = 150;
+    var myChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+            datasets: [{
+                data: @Html.Raw(Json.Encode(PieMember.Data)),
+                backgroundColor: [
+                    "rgba(0, 194, 146,0.9)",
+                    "rgba(0, 194, 146,0.7)",
+                    "rgba(0, 194, 146,0.5)",
+                    "rgba(0,0,0,0.07)"
+                ],
+                hoverBackgroundColor: [
+                    "rgba(0, 194, 146,0.9)",
+                    "rgba(0, 194, 146,0.7)",
+                    "rgba(0, 194, 146,0.5)",
+                    "rgba(0,0,0,0.07)"
+                ]
+
+            }],
+            labels: @Html.Raw(Json.Encode(PieMember.Date)),
+        },
+        options: {
+            responsive: true
+        }
+    });
+
+
+    // single bar chart
+    var ctx = document.getElementById("singelBarChart");
+    ctx.height = 150;
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels:@Html.Raw(Json.Encode(LineCount.Date)),
+            datasets: [
+                {
+                    label: "Sales Volume",
+                    data: @Html.Raw(Json.Encode(LineCount.Data)),
+                    borderColor: "rgba(0, 194, 146, 0.9)",
+                    borderWidth: "0",
+                    backgroundColor: "rgba(0, 194, 146, 0.5)"
+                }
+            ]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+
+})(jQuery);
+    </script>
+}

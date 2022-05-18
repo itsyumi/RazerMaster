@@ -1,0 +1,22 @@
+﻿@{
+    ViewBag.Title = "LoginFailure";
+}
+
+@section topCSS{
+    <link href="~/Areas/Member/Assets/css/login.css" rel="stylesheet" />
+    <style>
+    </style>
+}
+<div class="logo">
+    <a href="/">
+        <img src="/Assets/Img/RazerMasterLogo4.svg" alt="" srcset="">
+    </a>
+</div>
+<div class="container">
+    <div class="form-row d-flex flex-column align-content-center ">
+        <div class="col-md-4 loginbox text-center">
+            <h3>@ViewBag.Title.</h3>
+            <h3 class="text-danger">@ViewBag.String</h3>
+        </div>
+    </div>
+</div>

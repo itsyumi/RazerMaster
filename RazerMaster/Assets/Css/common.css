@@ -1,0 +1,35 @@
+.bottom-0 {
+    bottom: 0;
+}
+
+.razer-purple {
+    color: rgb(255, 0, 255);
+}
+
+.text-grey {
+    color: rgb(84, 84, 84);
+}
+
+.razer-font {
+    font-family: 'Exo 2', sans-serif;
+}
+
+.rem-22 {
+    font-size: 2.2rem;
+}
+
+.rem-185 {
+    font-size: 1.85rem;
+}
+
+.rem-15 {
+    font-size: 1.5rem;
+}
+
+.rem-1125 {
+    font-size: 1.125rem;
+}
+
+.razer-BGC {
+    background-color: rgb(17, 17, 17)!important;
+}

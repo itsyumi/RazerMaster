@@ -1,0 +1,76 @@
+﻿@using RazerMasterLibrary.Models
+
+@model List<Coins>
+
+
+@section topCSS{
+    <link href="~/Areas/Member/Assets/css/AccountManage.css" rel="stylesheet" />
+  
+}
+
+
+<div class="account">
+    <div class="container">
+
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                @Html.ActionLink("Account Detail", "SetMember", null, new { @class = "nav-link " })
+            </li>
+            <li class="nav-item" role="presentation">
+                @Html.ActionLink("Change Password", "ChangePassword", null, new { @class = "nav-link" })
+            </li>
+            <li class="nav-item" role="presentation">
+                @Html.ActionLink("Manage Logins", "ManageLogins", null, new { @class = "nav-link" })
+
+            </li>
+            <li class="nav-item" role="presentation">
+                @Html.ActionLink("Order History", "OrderHistory", null, new { @class = "nav-link" })
+            </li>
+            <li class="nav-item" role="presentation">
+                @Html.ActionLink("Coin History", "CoinHistory", null, new { @class = "nav-link active" })
+            </li>
+        </ul>
+        <div class="main-content">
+
+            @if (Model.Count() > 0)
+            {
+            <div class="list-group">
+
+                @foreach (var item in Model)
+                {
+                    if (item.Status == 0)
+                    {
+
+                        <a href="#" class="list-group-item list-group-item-action flex-column align-items-start bg-dark">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h5 class="mb-1">-@item.Quantity</h5>
+                                <h6>@item.EventTime.ToString("yyyy-MM-dd HH:mm:ss")</h6>
+                            </div>
+                            <p class="mb-1">@(item.EventType==2?"Use for Order":"")</p>
+                        </a>
+                    }
+                    else
+                    {
+                        <a href="#" class="list-group-item list-group-item-action flex-column align-items-start bg-dark">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h5 class="mb-1">+@item.Quantity</h5>
+                                <h6>@item.EventTime.ToString("yyyy-MM-dd HH:mm:ss")</h6>
+                            </div>
+                            <p class="mb-1">@(item.EventType==1?"Get From Game":"")</p>
+                        </a>
+                    }
+                }
+
+            </div>
+
+            }
+            else
+            {
+                <h2 class="text-center">
+                    You have no Details in the past!
+                </h2>
+            }
+        </div>
+
+    </div>
+</div>

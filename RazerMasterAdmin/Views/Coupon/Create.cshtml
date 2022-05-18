@@ -1,0 +1,139 @@
+﻿@model RazerMasterLibrary.Models.Coupons
+
+@{
+    ViewBag.Title = "Create Coupon";
+}
+
+<!-- content Start -->
+
+<div class="content">
+    <div class="animated fadeIn">
+        <div class="row justify-content-center">
+            <div class="col-10">
+                <div class="card border-secondary mb-3">
+                    <div class="card-header h5 font-weight-bold">Create Coupon</div>
+                    <div class="card-body text-secondary">
+
+                        @using (Html.BeginForm())
+                        {
+                            @Html.AntiForgeryToken()
+
+                            <div class="form-group row">
+                                @Html.LabelFor(model => model.Code, htmlAttributes: new { @class = "col-form-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.Code, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.Code, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "col-form-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            @*<div class="form-group row">
+                                    @Html.LabelFor(model => model.Discount, htmlAttributes: new { @class = "col-form-label col-md-2" })
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.Discount, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.Discount, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>*@
+
+                            <div class="form-group row">
+                                <label class="col-form-label col-md-2">Discount</label>
+                                @*@Html.LabelFor(model => model.Is_Fixed, htmlAttributes: new { @class = "col-form-label col-md-2" })*@
+                                <div class="col-md-4 ">
+                                    <div class="form-check form-check-inline">
+                                        @Html.RadioButtonFor(model => model.Is_Fixed, true, htmlAttributes: new { @class = "form-check-input fixed-price" })
+                                        <p class="col-form-label">Fixed Price</p>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        @Html.RadioButtonFor(model => model.Is_Fixed, false, htmlAttributes: new { @class = "form-check-input percentage" })
+                                        <p class="col-form-label">Percentage</p>
+                                    </div>
+                                    <div class="d-flex">
+                                        <p class=" col-form-label" id="MoneySymbol">$&nbsp;&nbsp;</p>
+                                        @Html.EditorFor(model => model.Discount, new { htmlAttributes = new { @class = "form-control", @type = "number", @min="1" } })
+                                        <p class=" col-form-label" id="PercentSymbol">&nbsp;&nbsp;%</p>
+                                    </div>
+                                    @Html.ValidationMessageFor(model => model.Discount, "", new { @class = "text-danger"})
+                                </div>
+                                @Html.LabelFor(model => model.MinOrderSubtotal, htmlAttributes: new { @class = "col-form-label col-md-2" })
+                                <div class="col-md-4">
+                                    @Html.EditorFor(model => model.MinOrderSubtotal, new { htmlAttributes = new { @class = "form-control", @type = "number", @min = "0" } })
+                                    @Html.ValidationMessageFor(model => model.MinOrderSubtotal, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                @Html.LabelFor(model => model.StartTime, htmlAttributes: new { @class = "col-form-label col-md-2" })
+                                <div class="col-md-4">
+                                    @Html.EditorFor(model => model.StartTime, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.StartTime, "", new { @class = "text-danger" })
+                                </div>
+                                @Html.LabelFor(model => model.EndTime, htmlAttributes: new { @class = "col-form-label col-md-2" })
+                                <div class="col-md-4">
+                                    @Html.EditorFor(model => model.EndTime, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.EndTime, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group row justify-content-end">
+                                <div class="col-sm-5 d-flex justify-content-end">
+                                    <input type="submit" value="Create" class="btn btn-success m-1" />
+                                    <a class="btn btn-secondary m-1" href="@Url.Action("Index")" role="button">Cancel</a>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section topCSS{
+    <link href="~/assets/css/jquery.datetimepicker.css" rel="stylesheet" />
+}
+
+@section endJS{
+    <script src="~/assets/js/jscolor.js"></script>
+    <script src="~/Scripts/jquery-3.4.1.js"></script>
+    <script src="~/assets/js/jquery.datetimepicker.full.js"></script>
+
+    <script>
+        $('#Is_Fixed.fixed-price').attr('checked', true);
+        $('#PercentSymbol').hide();
+        $('#Is_Fixed.fixed-price').change(function () {
+            $('#Discount').removeAttr('max');
+            $('#MoneySymbol').show();
+            $('#PercentSymbol').hide();
+        })
+        $('#Is_Fixed.percentage').change(function () {
+            $('#Discount').attr('max', 99);
+            $('#MoneySymbol').hide();
+            $('#PercentSymbol').show();
+        })
+
+        //日期防呆
+        jQuery(function () {
+            jQuery('#StartTime').datetimepicker({
+                onShow: function (ct) {
+                    this.setOptions({
+                        maxDate: jQuery('#EndTime').val() ? jQuery('#EndTime').val() : false
+                    })
+                }
+            });
+            jQuery('#EndTime').datetimepicker({
+                onShow: function (ct) {
+                    this.setOptions({
+                        minDate: jQuery('#StartTime').val() ? jQuery('#StartTime').val() : false
+                    })
+                }
+            });
+        });
+    </script>
+}

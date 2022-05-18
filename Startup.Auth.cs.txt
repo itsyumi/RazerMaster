@@ -1,0 +1,24 @@
+using Microsoft.Owin;
+using Microsoft.Owin.Security;
+using Microsoft.Owin.Security.Cookies;
+using Microsoft.Owin.Security.Facebook;
+using Microsoft.Owin.Security.Google;
+using Microsoft.Owin.Security.MicrosoftAccount;
+using Owin;
+
+namespace IRIS
+{
+    public partial class Startup
+    {
+        private void ConfigureAuth(IAppBuilder app)
+        {
+            var cookieAuthenticationOptions = new CookieAuthenticationOptions { CookieName = Models.Utils.Utilities.AppName + ".Auth", ExpireTimeSpan = System.TimeSpan.FromMinutes(120), LoginPath = new PathString("/Account/Login") };
+            app.UseCookieAuthentication(cookieAuthenticationOptions);
+            app.SetDefaultSignInAsAuthenticationType(cookieAuthenticationOptions.AuthenticationType);
+            app.UseFacebookAuthentication(new FacebookAuthenticationOptions { AppId = "<MyFacebookAppId>", AppSecret = "<MyFacebookAppSecret>", Fields = { "email" }, Scope = { "email" } });
+            app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions { ClientId = "<MyGoogleClientId>", ClientSecret = "<MyGoogleClientSecret>" });
+            app.UseMicrosoftAccountAuthentication(new MicrosoftAccountAuthenticationOptions { ClientId = "<MyMicrosoftClientId>", ClientSecret = "<MyMicrosoftClientSecret>", Scope = { "wl.emails" } });
+        }
+    }
+}
+
